@@ -5,12 +5,12 @@ from dataclasses import dataclass
 
 from activity_world_model import Frame, RUNNER_FOOTLINE, fmt
 
-THIGH_FAR = 50.0
-SHIN_FAR = 44.0
-FOOT_FAR = 11.0
-THIGH_NEAR = 52.0
-SHIN_NEAR = 46.0
-FOOT_NEAR = 12.0
+THIGH_FAR = 51.0
+SHIN_FAR = 45.0
+FOOT_FAR = 12.0
+THIGH_NEAR = 53.0
+SHIN_NEAR = 47.0
+FOOT_NEAR = 13.0
 
 
 @dataclass(frozen=True)
@@ -36,82 +36,113 @@ def _lerp(a, b, p):
 
 def pose_for(frame: Frame) -> Pose:
     p = max(0.0, min(1.0, frame.phase))
+
     if frame.state == 'sprint':
+        # Contralateral arm/leg drive, double-support body rhythm, and a
+        # counter-rotated head keep the gaze stable while the torso leans.
         s = math.sin(p * math.tau)
         c = math.cos(p * math.tau)
+        double_step = .5 - .5 * math.cos(p * math.tau * 2)
         return Pose(
-            -12 + 3 * c,
-            1.5 * abs(s),
-            3 - 2.5 * c,
-            48 * s - 12,
-            56 + 18 * max(0, -s),
-            -48 * s + 14,
-            58 + 16 * max(0, s),
-            -40 * s + 5,
-            26 + 46 * max(0, s),
-            40 * s - 5,
-            26 + 46 * max(0, -s),
-            1.12 + .17 * max(0, -s),
-            1.8 * abs(s),
+            -8.0 + 1.2 * c,
+            .4 + .45 * double_step,
+            8.0 - 1.0 * c,
+            -38 * s - 6,
+            74 + 18 * max(0, s),
+            38 * s + 8,
+            76 + 18 * max(0, -s),
+            34 * s + 3,
+            20 + 52 * max(0, s),
+            -34 * s - 3,
+            18 + 50 * max(0, -s),
+            1.08 + .08 * max(0, -s),
+            .65 * double_step,
         )
+
     if frame.state == 'jump':
-        if p < .14:
-            q = p / .14
-            return Pose(-9, 5 * q, 3, -34, 76, 32, 72, 28, 86, -24, 84, 1.22, 4 * q)
-        if p < .46:
-            q = (p - .14) / .32
+        if p < .18:
+            q = p / .18
             return Pose(
-                _lerp(-9, -2, q), _lerp(5, -4, q), _lerp(3, -4, q),
-                _lerp(-34, -78, q), _lerp(76, 24, q),
-                _lerp(32, 58, q), _lerp(72, 28, q),
-                _lerp(28, -24, q), _lerp(86, 24, q),
-                _lerp(-24, 22, q), _lerp(84, 30, q), 1.30, _lerp(4, -3, q),
+                _lerp(-9, -13, q), _lerp(1, 5, q), _lerp(9, 13, q),
+                _lerp(12, 35, q), _lerp(72, 84, q),
+                _lerp(16, 40, q), _lerp(74, 84, q),
+                _lerp(2, 10, q), _lerp(44, 96, q),
+                _lerp(-2, -10, q), _lerp(42, 94, q),
+                _lerp(1.10, 1.16, q), _lerp(0, 5, q),
+            )
+        if p < .42:
+            q = (p - .18) / .24
+            return Pose(
+                _lerp(-13, -5, q), _lerp(5, -2, q), _lerp(13, 5, q),
+                _lerp(35, 18, q), _lerp(84, 58, q),
+                _lerp(40, -72, q), _lerp(84, 30, q),
+                _lerp(10, 26, q), _lerp(96, 34, q),
+                _lerp(-10, -24, q), _lerp(94, 30, q),
+                _lerp(1.16, 1.33, q), _lerp(5, -2, q),
             )
         if p < .78:
-            q = (p - .46) / .32
-            return Pose(-2, -4, -4, -78, 24, 58, 28,
-                        _lerp(-24, 22, q), _lerp(24, 66, q),
-                        _lerp(22, -14, q), _lerp(30, 68, q), 1.33, -3)
+            q = (p - .42) / .36
+            tuck = math.sin(math.pi * q)
+            return Pose(
+                _lerp(-5, -3, q), -2, _lerp(5, 3, q),
+                _lerp(18, 10, q), _lerp(58, 64, q),
+                _lerp(-72, -55, q), _lerp(30, 38, q),
+                _lerp(26, 10, q), 34 + 42 * tuck - 8 * q,
+                _lerp(-24, -12, q), 30 + 44 * tuck - 6 * q,
+                _lerp(1.33, 1.29, q), -2,
+            )
         q = (p - .78) / .22
         return Pose(
-            _lerp(-2, 5, q), _lerp(-4, 5, q), _lerp(-4, 4, q),
-            _lerp(-78, -24, q), _lerp(24, 74, q),
-            _lerp(58, 20, q), _lerp(28, 78, q),
-            _lerp(22, 26, q), _lerp(66, 88, q),
-            _lerp(-14, -24, q), _lerp(68, 86, q),
-            _lerp(1.33, 1.20, q), _lerp(-3, 5, q),
+            _lerp(-3, 4, q), _lerp(-2, 4, q), _lerp(3, -2, q),
+            _lerp(10, -12, q), _lerp(64, 82, q),
+            _lerp(-55, -18, q), _lerp(38, 76, q),
+            _lerp(10, 8, q), _lerp(28, 82, q),
+            _lerp(-12, -8, q), _lerp(24, 80, q),
+            _lerp(1.29, 1.14, q), _lerp(-2, 5, q),
         )
+
     if frame.state == 'climb':
         if p < .22:
             q = p / .22
-            return Pose(_lerp(-8, -16, q), 1, _lerp(2, -6, q),
-                        _lerp(-6, -74, q), _lerp(58, 18, q),
-                        _lerp(8, -105, q), _lerp(56, 12, q),
-                        -8, 54, 12, 48, _lerp(1.16, 1.34, q), 0)
+            return Pose(
+                _lerp(-8, -15, q), 1, _lerp(8, 15, q),
+                _lerp(-4, -70, q), _lerp(62, 22, q),
+                _lerp(-8, -106, q), _lerp(58, 12, q),
+                -8, 54, 12, 48, _lerp(1.12, 1.30, q), 0,
+            )
         if p < .50:
             q = (p - .22) / .28
-            return Pose(-16, 3 + 1.4 * math.sin(q * math.pi), -6,
-                        -76, 18, -108, 10, -18, 68, 18, 62, 1.36, 2)
+            return Pose(-15, 3 + 1.2 * math.sin(q * math.pi), 15,
+                        -72, 20, -108, 10, -18, 68, 18, 62, 1.32, 2)
         if p < .82:
             q = (p - .50) / .32
-            return Pose(_lerp(-16, -6, q), _lerp(3, 0, q), _lerp(-6, 1, q),
-                        _lerp(-76, -38, q), _lerp(18, 90, q),
-                        _lerp(-108, -44, q), _lerp(10, 92, q),
-                        _lerp(-18, 24, q), _lerp(68, 90, q),
-                        _lerp(18, -14, q), _lerp(62, 94, q),
-                        _lerp(1.36, 1.22, q), _lerp(2, 0, q))
+            return Pose(
+                _lerp(-15, -6, q), _lerp(3, 0, q), _lerp(15, 6, q),
+                _lerp(-72, -34, q), _lerp(20, 88, q),
+                _lerp(-108, -42, q), _lerp(10, 90, q),
+                _lerp(-18, 24, q), _lerp(68, 88, q),
+                _lerp(18, -14, q), _lerp(62, 92, q),
+                _lerp(1.32, 1.18, q), _lerp(2, 0, q),
+            )
         q = (p - .82) / .18
-        return Pose(_lerp(-6, 0, q), 0, _lerp(1, 0, q),
-                    _lerp(-38, 0, q), _lerp(90, 56, q),
-                    _lerp(-44, 0, q), _lerp(92, 56, q),
-                    _lerp(24, 0, q), _lerp(90, 24, q),
-                    _lerp(-14, 0, q), _lerp(94, 24, q),
-                    _lerp(1.22, 1.16, q), 0)
+        return Pose(
+            _lerp(-6, -2, q), 0, _lerp(6, 2, q),
+            _lerp(-34, -4, q), _lerp(88, 60, q),
+            _lerp(-42, -6, q), _lerp(90, 62, q),
+            _lerp(24, 0, q), _lerp(88, 24, q),
+            _lerp(-14, 0, q), _lerp(92, 24, q),
+            _lerp(1.18, 1.12, q), 0,
+        )
+
     if frame.state == 'turn':
         s = math.sin(p * math.pi)
-        return Pose(20 * s, 2 * s, -12 * s, -28 * s, 66, 36 * s, 68, 24 * s, 74, -20 * s, 74, 1.24, 2 * s)
-    breathe = math.sin(frame.t * 2) if frame.t else 0
-    return Pose(0, 0, -breathe, -7, 58, 7, 58, -2, 22, 2, 22, 1.18, .45 * breathe)
+        return Pose(16 * s - 2, 1.5 * s, 2 - 16 * s,
+                    -24 * s - 4, 68, 30 * s - 6, 70,
+                    20 * s, 70, -18 * s, 70, 1.18, 1.5 * s)
+
+    breathe = math.sin(frame.t * 1.8) if frame.t else 0
+    return Pose(-2, 0, 2 - .6 * breathe, -4, 62, -6, 62,
+                -2, 18, 2, 18, 1.12, .35 * breathe)
 
 
 def _rot(name, frames, total, getter):
@@ -119,7 +150,8 @@ def _rot(name, frames, total, getter):
     vals = ';'.join(f'{fmt(getter(pose_for(f)))} 0 0' for f in frames)
     return (
         f'<animateTransform id="{name}" attributeName="transform" type="rotate" '
-        f'additive="sum" values="{vals}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/>'
+        f'additive="sum" calcMode="linear" values="{vals}" keyTimes="{keys}" '
+        f'dur="{fmt(total)}s" repeatCount="indefinite"/>'
     )
 
 
@@ -148,56 +180,87 @@ def render_titan(frames: list[Frame], total: float) -> str:
     pelvis = ';'.join(f'0 {fmt(pose_for(f).pelvis_y + pose_for(f).body_bob)}' for f in frames)
     fists = ';'.join(f'{fmt(pose_for(f).fist_near_scale)} {fmt(pose_for(f).fist_near_scale)}' for f in frames)
 
-    return f'''<!-- TITAN_BODY_DEPTH --><!-- TITAN_CONTINUOUS_RIG --><!-- TITAN_FOOT_CONTACT_CYCLE --><!-- HULK_MASS_SILHOUETTE --><!-- BRICK_STATE_JUMP --><!-- BRICK_STATE_CLIMB --><!-- BRICK_STATE_SPRINT --><!-- BRICK_STATE_TURN --><!-- BRICK_ROUTE_FORWARD --><!-- BRICK_ROUTE_REVERSE -->
-<g id="titan-shadow-motion"><animateTransform attributeName="transform" type="translate" values="{shadow_pos}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/><ellipse cx="0" cy="0" rx="64" ry="12" fill="#000" opacity=".46" filter="url(#blur4)"/></g>
-<g id="titan-motion"><animateTransform attributeName="transform" type="translate" values="{pos}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/><g id="titan-direction"><animateTransform attributeName="transform" type="scale" calcMode="discrete" values="{dirs}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/><g id="titan-squash"><animateTransform attributeName="transform" type="scale" values="{scales}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/><g id="titan-pelvis"><animateTransform attributeName="transform" type="translate" values="{pelvis}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/>
+    return f'''<!-- TITAN_BODY_DEPTH --><!-- TITAN_CONTINUOUS_RIG --><!-- TITAN_FOOT_CONTACT_CYCLE --><!-- HULK_MASS_SILHOUETTE --><!-- HULK_DIRECTIONAL_PROFILE --><!-- BIOMECHANICAL_MOTION_V5 --><!-- BRICK_STATE_JUMP --><!-- BRICK_STATE_CLIMB --><!-- BRICK_STATE_SPRINT --><!-- BRICK_STATE_TURN --><!-- BRICK_ROUTE_FORWARD --><!-- BRICK_ROUTE_REVERSE -->
+<g id="titan-shadow-motion"><animateTransform attributeName="transform" type="translate" calcMode="linear" values="{shadow_pos}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/><ellipse cx="0" cy="0" rx="67" ry="12" fill="#000" opacity=".46" filter="url(#blur4)"/></g>
+<g id="titan-motion"><animateTransform attributeName="transform" type="translate" calcMode="linear" values="{pos}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/><g id="titan-direction"><animateTransform attributeName="transform" type="scale" calcMode="discrete" values="{dirs}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/><g id="titan-squash"><animateTransform attributeName="transform" type="scale" calcMode="linear" values="{scales}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/><g id="titan-pelvis"><animateTransform attributeName="transform" type="translate" calcMode="linear" values="{pelvis}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/>
 
 <g id="far-hip">{_rot('far-hip-anim',frames,total,lambda p:p.hip_far)}
-  <path d="M-31 -9Q-18 -27 0 -9Q8 13 -4 38Q-11 54 -25 58Q-43 49 -42 25Q-42 2 -31 -9Z" fill="url(#greenFar)" stroke="#164c25" stroke-width="1.5"/>
-  <g transform="translate(-22 53)"><g>{_rot('far-knee-anim',frames,total,lambda p:p.knee_far)}
-    <path d="M-14 -5Q3 -12 15 4L13 39Q8 53 -3 56Q-18 49 -19 34Z" fill="url(#greenFar)"/>
-    <path d="M-19 45Q1 36 25 45L33 56Q9 65 -18 58Z" fill="#172019" stroke="#61d777" stroke-opacity=".48"/>
+  <path d="M-33 -10Q-18 -30 1 -10Q10 12 -3 39Q-12 56 -27 60Q-47 50 -46 24Q-46 1 -33 -10Z" fill="url(#greenFar)" stroke="#123f20" stroke-width="1.6"/>
+  <path d="M-37 11Q-18 2 -3 15M-41 35Q-19 23 -5 37" fill="none" stroke="#0b4e22" stroke-width="2" opacity=".68"/>
+  <g transform="translate(-24 54)"><g>{_rot('far-knee-anim',frames,total,lambda p:p.knee_far)}
+    <path d="M-16 -6Q4 -14 17 4L15 40Q9 56 -4 59Q-21 53 -22 33Z" fill="url(#greenFar)"/>
+    <path d="M-22 47Q-2 39 23 45Q36 49 42 57Q32 65 10 65Q-11 66 -25 59Z" fill="url(#greenFar)" stroke="#164c25" stroke-width="1.2"/>
+    <path d="M16 52L37 57M9 56L31 62M1 57L21 64" fill="none" stroke="#0b4d20" stroke-width="1.3" opacity=".72"/>
   </g></g>
 </g>
 
-<g id="far-shoulder" transform="translate(-67 -92)"><g>{_rot('far-shoulder-anim',frames,total,lambda p:p.shoulder_far)}
-  <path d="M-28 -13Q-3 -36 23 -13Q38 10 20 37Q5 55 -17 42Q-40 21 -28 -13Z" fill="url(#greenFar)"/>
-  <path d="M-12 26Q7 17 20 32L17 66Q8 82 -8 72Q-23 56 -18 39Z" fill="url(#greenFar)"/>
-  <g transform="translate(2 77)"><g>{_rot('far-elbow-anim',frames,total,lambda p:p.elbow_far)}
-    <path d="M-12 -7Q6 -13 17 4L15 46Q5 62 -10 52Q-20 34 -17 8Z" fill="url(#greenFar)"/>
-    <path d="M-21 43Q1 31 22 44Q28 62 6 72Q-18 66 -24 54Z" fill="url(#greenFar)"/>
+<g id="far-shoulder" transform="translate(-62 -88)"><g>{_rot('far-shoulder-anim',frames,total,lambda p:p.shoulder_far)}
+  <path d="M-29 -15Q-5 -39 24 -14Q39 9 22 39Q7 57 -18 46Q-43 25 -29 -15Z" fill="url(#greenFar)"/>
+  <path d="M-13 27Q8 17 22 32L19 67Q10 84 -8 75Q-24 58 -20 39Z" fill="url(#greenFar)"/>
+  <path d="M-18 42Q3 32 19 45" fill="none" stroke="#0b4d20" stroke-width="2" opacity=".72"/>
+  <g transform="translate(2 78)"><g>{_rot('far-elbow-anim',frames,total,lambda p:p.elbow_far)}
+    <path d="M-13 -7Q7 -14 19 5L16 48Q6 64 -11 55Q-22 36 -18 8Z" fill="url(#greenFar)"/>
+    <path d="M-23 43Q0 31 24 44Q31 63 7 74Q-20 68 -26 54Z" fill="url(#greenFar)"/>
   </g></g>
 </g></g>
 
 <g id="titan-purple-shorts">
-  <path d="M-46 -24Q0 -9 46 -24L50 10L35 25L20 16L8 29L-7 18L-22 27L-36 16L-52 9Z" fill="url(#shortsPurple)" stroke="#b995cb" stroke-opacity=".65" stroke-width="1.5"/>
-  <path d="M-43 7L-58 24L-32 16M44 7L59 22L32 16M-3 -9L2 15" fill="none" stroke="#d2aedf" stroke-width="2.2" opacity=".58"/>
+  <path d="M-50 -24Q-15 -13 4 -17Q27 -12 50 -25L54 10L38 27L20 18L9 31L-7 20L-23 29L-38 17L-55 9Z" fill="url(#shortsPurple)" stroke="#b995cb" stroke-opacity=".62" stroke-width="1.5"/>
+  <path d="M-48 6L-61 25L-34 17M48 6L62 23L34 17M-3 -11L3 17M-31 -14L-18 24M31 -15L18 23" fill="none" stroke="#d2aedf" stroke-width="2" opacity=".52"/>
+  <path d="M-53 10L-41 4L-34 17L-22 10L-15 24M52 10L41 4L34 17L23 10L17 24" fill="none" stroke="#2a1333" stroke-width="2.2" opacity=".8"/>
 </g>
 
 <g id="near-hip">{_rot('near-hip-anim',frames,total,lambda p:p.hip_near)}
-  <path d="M4 -10Q25 -29 43 -9Q52 15 39 41Q31 58 14 61Q-7 51 -6 27Q-5 3 4 -10Z" fill="url(#greenNear)" stroke="#baf9bf" stroke-opacity=".22" stroke-width="1.4"/>
-  <path d="M6 7Q28 0 42 14M3 33Q25 24 39 35" fill="none" stroke="#0a5a26" stroke-width="2" opacity=".72"/>
-  <g transform="translate(19 55)"><g>{_rot('near-knee-anim',frames,total,lambda p:p.knee_near)}
-    <path d="M-15 -6Q5 -14 18 4L16 42Q9 58 -5 60Q-22 53 -22 32Z" fill="url(#greenNear)"/>
-    <path d="M-23 48Q1 38 29 48L38 61Q12 72 -23 64Z" fill="#151e19" stroke="#9affaa" stroke-opacity=".64" stroke-width="1.3"/>
+  <path d="M3 -11Q25 -32 46 -10Q56 15 41 43Q31 61 13 64Q-10 53 -8 27Q-7 2 3 -11Z" fill="url(#greenNear)" stroke="#aee9a9" stroke-opacity=".20" stroke-width="1.4"/>
+  <path d="M5 8Q29 -1 44 15M1 35Q26 23 41 37" fill="none" stroke="#0a5423" stroke-width="2.2" opacity=".74"/>
+  <g transform="translate(20 57)"><g>{_rot('near-knee-anim',frames,total,lambda p:p.knee_near)}
+    <path d="M-17 -7Q6 -16 20 4L18 43Q10 61 -6 63Q-25 55 -24 33Z" fill="url(#greenNear)"/>
+    <path d="M-25 50Q-2 40 27 48Q41 51 49 61Q37 72 12 73Q-14 73 -28 64Z" fill="url(#greenNear)" stroke="#c6f6bf" stroke-opacity=".22" stroke-width="1.2"/>
+    <path d="M20 55L44 61M12 59L36 67M3 61L26 69" fill="none" stroke="#0a5423" stroke-width="1.5" opacity=".76"/>
   </g></g>
 </g>
 
 <g id="titan-torso" transform="translate(0 -22)"><g>{_rot('torso-anim',frames,total,lambda p:p.torso)}
-  <path d="M-86 -60Q-82 -103 -55 -121Q-35 -134 -16 -117Q0 -136 18 -117Q38 -135 58 -120Q83 -101 88 -59Q80 -19 48 0Q24 13 0 7Q-25 13 -50 0Q-81 -20 -86 -60Z" fill="url(#torsoGreen)" stroke="#caffce" stroke-opacity=".42" stroke-width="1.7" filter="url(#titanShadow)"/>
-  <g id="titan-traps"><path d="M-72 -94Q-51 -136 -12 -125L0 -104L12 -125Q52 -137 74 -92Q48 -84 27 -91Q12 -94 0 -84Q-13 -94 -28 -91Q-50 -83 -72 -94Z" fill="url(#trapGreen)"/></g>
-  <g id="titan-chest"><path d="M-67 -72Q-45 -100 -5 -83L-2 -45Q-36 -34 -65 -52Z" fill="url(#pecGreen)" stroke="#155f2b" stroke-opacity=".55"/><path d="M5 -83Q45 -100 68 -71L66 -51Q36 -34 2 -45Z" fill="url(#pecGreen)" stroke="#155f2b" stroke-opacity=".55"/><path d="M0 -81V-15M-54 -43Q-28 -27 -4 -35M54 -43Q28 -27 4 -35M-37 -23Q-18 -10 -3 -18M37 -23Q18 -10 3 -18" fill="none" stroke="#073b18" stroke-width="2.5" opacity=".78"/></g>
-  <path d="M-23 -114L-20 -141H21L24 -113Q9 -101 -23 -114Z" fill="url(#neckGreen)"/>
-  <g id="titan-head" transform="translate(0 -154)"><g>{_rot('head-anim',frames,total,lambda p:p.head)}
-    <path id="titan-face" d="M-34 -20Q-32 -48 -9 -55Q18 -57 35 -36Q43 -11 35 22Q27 43 2 48Q-25 43 -36 22Q-44 0 -34 -20Z" fill="url(#faceGreen)" stroke="#d7ffda" stroke-opacity=".55" stroke-width="1.8"/>
-    <path id="titan-hair" d="M-35 -21L-47 -39L-32 -36L-38 -56L-21 -48L-13 -67L-2 -51L11 -68L18 -50L37 -61L32 -43L50 -46L36 -22L23 -30L12 -25L2 -32L-10 -24L-23 -31Z" fill="#070c0a"/>
-    <path id="titan-brow" d="M-30 -11Q-17 -25 -4 -12M5 -12Q20 -26 32 -9" fill="none" stroke="#062d13" stroke-width="5.5" stroke-linecap="round"/>
-    <path d="M-25 -5L-7 -1M7 -1L27 -6" stroke="#d8ffe0" stroke-width="3" stroke-linecap="round"/><circle cx="-12" cy="-3" r="2.6" fill="#07110a"/><circle cx="15" cy="-3" r="2.6" fill="#07110a"/>
-    <path d="M2 1L-3 12L6 14" fill="none" stroke="#17622d" stroke-width="2.6"/><path id="titan-jaw" d="M-29 17Q0 7 30 17L25 37Q2 51 -25 36Z" fill="#267e37" stroke="#0a421b" stroke-width="1.8"/><path d="M-21 23Q1 15 23 23L19 35Q0 41 -18 34Z" fill="#220b0c"/><path d="M-16 23H19L15 30H-12Z" fill="#f5efe3"/>
+  <path d="M-79 -58Q-77 -101 -54 -121Q-38 -136 -17 -121Q0 -139 20 -119Q48 -134 69 -111Q91 -88 93 -52Q86 -15 53 8Q25 20 -6 11Q-37 18 -60 2Q-82 -16 -79 -58Z" fill="url(#torsoGreen)" stroke="#b9e9b5" stroke-opacity=".34" stroke-width="1.7" filter="url(#titanShadow)"/>
+  <g id="titan-traps"><path d="M-70 -94Q-53 -134 -17 -126L1 -106L17 -129Q55 -138 80 -96Q54 -85 33 -91Q15 -95 2 -84Q-13 -94 -30 -91Q-51 -84 -70 -94Z" fill="url(#trapGreen)"/></g>
+  <g id="titan-chest">
+    <path d="M-64 -73Q-44 -102 -5 -85L-3 -46Q-35 -34 -64 -52Z" fill="url(#pecGreen)" stroke="#155f2b" stroke-opacity=".50"/>
+    <path d="M5 -85Q48 -104 73 -72L71 -49Q39 -31 2 -45Z" fill="url(#pecGreen)" stroke="#155f2b" stroke-opacity=".52"/>
+    <path d="M0 -82V-14M-53 -43Q-28 -27 -4 -35M59 -44Q30 -25 4 -34M-39 -23Q-18 -9 -3 -18M42 -23Q20 -8 3 -17" fill="none" stroke="#073b18" stroke-width="2.5" opacity=".80"/>
+    <path d="M-48 -61Q-36 -71 -21 -65M22 -65Q42 -74 58 -61M-31 -4Q-19 4 -8 -2M10 -2Q24 5 35 -5" fill="none" stroke="#78cf6e" stroke-width="1.3" opacity=".35"/>
+  </g>
+  <path d="M-22 -115L-19 -143H23L27 -113Q11 -100 -22 -115Z" fill="url(#neckGreen)"/>
+  <path d="M-15 -135Q4 -127 20 -136M-12 -125Q4 -118 18 -127" fill="none" stroke="#0a4c20" stroke-width="2" opacity=".64"/>
+
+  <g id="titan-head" transform="translate(8 -156)"><g>{_rot('head-anim',frames,total,lambda p:p.head)}
+    <ellipse id="titan-ear" cx="-29" cy="2" rx="7" ry="11" fill="#3f9f43" stroke="#0b4c20" stroke-width="1.4"/>
+    <path id="titan-face" d="M-31 -20Q-28 -49 -6 -57Q20 -60 37 -43Q47 -31 44 -12Q43 0 50 9L41 16Q38 38 15 49Q-11 52 -29 32Q-40 13 -35 -5Q-34 -13 -31 -20Z" fill="url(#faceGreen)" stroke="#c7edbd" stroke-opacity=".42" stroke-width="1.8"/>
+    <path id="titan-hair" d="M-34 -22L-48 -40L-31 -37L-38 -58L-20 -49L-11 -69L0 -52L13 -70L21 -52L41 -63L35 -45L53 -48L39 -25L26 -31L16 -27L6 -34L-6 -26L-20 -33Z" fill="#070b09"/>
+    <path id="titan-brow" d="M-24 -12Q-13 -23 -2 -13M6 -13Q20 -25 32 -10" fill="none" stroke="#062d13" stroke-width="5.2" stroke-linecap="round"/>
+    <path id="titan-eye-far" d="M-20 -6L-5 -3" stroke="#d7edcc" stroke-width="2.5" stroke-linecap="round"/><circle cx="-9" cy="-4" r="2.2" fill="#07110a"/>
+    <path id="titan-eye-near" d="M5 -4L28 -8" stroke="#e5f4da" stroke-width="3" stroke-linecap="round"/><circle cx="18" cy="-6" r="2.7" fill="#07110a"/>
+    <path id="titan-nose" d="M18 -1Q27 3 34 10L29 16L18 14" fill="none" stroke="#155f2b" stroke-width="2.8" stroke-linejoin="round"/>
+    <path d="M-21 7Q-10 13 -1 10M17 13Q28 18 37 14" fill="none" stroke="#246f2e" stroke-width="1.7" opacity=".7"/>
+    <path id="titan-jaw" d="M-27 17Q-6 10 20 14L37 20L35 35Q19 50 -2 52Q-22 46 -31 34Z" fill="#2d8436" stroke="#0a421b" stroke-width="1.8"/>
+    <path id="titan-mouth" d="M-12 25Q8 19 31 25Q21 37 -3 38Q-12 34 -12 25Z" fill="#220b0c"/>
+    <path d="M-7 25Q9 22 26 26L21 31Q7 33 -5 30Z" fill="#eee9da"/>
+    <path d="M4 40Q15 38 25 32" fill="none" stroke="#0b4a1e" stroke-width="2" opacity=".7"/>
   </g></g>
-  <g id="near-shoulder" transform="translate(72 -91)"><g>{_rot('near-shoulder-anim',frames,total,lambda p:p.shoulder_near)}
-    <path d="M-35 -15Q-4 -42 30 -15Q49 11 29 44Q12 64 -15 50Q-47 26 -35 -15Z" fill="url(#greenNear)" stroke="#d6ffda" stroke-opacity=".35"/><path d="M-16 31Q9 17 26 36L22 76Q10 96 -10 82Q-29 62 -24 43Z" fill="url(#greenNear)"/><path d="M-13 39Q7 27 23 42M-17 64Q6 49 22 62" fill="none" stroke="#0b5c28" stroke-width="2.1" opacity=".75"/>
-    <g transform="translate(1 66)"><g>{_rot('near-elbow-anim',frames,total,lambda p:p.elbow_near)}<path d="M-18 -8Q5 -16 21 6L18 51Q7 71 -13 61Q-28 40 -24 11Z" fill="url(#greenNear)"/><g id="near-fist" transform="translate(0 58)"><animateTransform attributeName="transform" type="scale" additive="sum" values="{fists}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/><path d="M-38 -23Q-9 -43 31 -21Q52 2 38 33Q15 55 -21 42Q-49 22 -38 -23Z" fill="url(#fistGreen)" stroke="#e0ffe2" stroke-opacity=".55" stroke-width="1.6"/><path d="M-27 -9Q-6 -17 26 -9M-30 4Q-6 -5 30 5M-23 18Q-2 10 24 18" stroke="#0a5423" stroke-width="2.2" fill="none" opacity=".78"/></g></g></g>
+
+  <g id="near-shoulder" transform="translate(74 -87)"><g>{_rot('near-shoulder-anim',frames,total,lambda p:p.shoulder_near)}
+    <path d="M-37 -17Q-5 -45 33 -16Q52 11 31 47Q13 68 -17 53Q-51 28 -37 -17Z" fill="url(#greenNear)" stroke="#c7f2bf" stroke-opacity=".27" stroke-width="1.2"/>
+    <path d="M-17 32Q10 16 29 37L24 80Q10 101 -12 86Q-31 64 -26 44Z" fill="url(#greenNear)"/>
+    <path d="M-14 40Q9 26 26 42M-19 65Q7 49 24 63M-8 12Q10 5 25 14" fill="none" stroke="#0b5c28" stroke-width="2.2" opacity=".76"/>
+    <path d="M18 20Q31 31 22 48" fill="none" stroke="#7bd471" stroke-width="1.4" opacity=".42"/>
+    <g transform="translate(1 69)"><g>{_rot('near-elbow-anim',frames,total,lambda p:p.elbow_near)}
+      <path d="M-20 -8Q6 -17 23 6L20 53Q8 75 -15 64Q-31 41 -26 11Z" fill="url(#greenNear)"/>
+      <path d="M-15 15Q6 5 21 18M-18 40Q6 28 20 42" fill="none" stroke="#0a5423" stroke-width="2" opacity=".72"/>
+      <g id="near-fist" transform="translate(0 61)"><animateTransform attributeName="transform" type="scale" additive="sum" calcMode="linear" values="{fists}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/>
+        <path d="M-40 -25Q-10 -46 34 -23Q57 2 41 37Q16 61 -24 46Q-54 24 -40 -25Z" fill="url(#fistGreen)" stroke="#d5f3cd" stroke-opacity=".42" stroke-width="1.6"/>
+        <path d="M-29 -10Q-5 -20 29 -10M-32 4Q-5 -7 33 5M-25 20Q-1 10 27 19" stroke="#0a5423" stroke-width="2.3" fill="none" opacity=".80"/>
+        <path d="M-21 -20Q-12 -5 -18 10M-3 -25Q4 -7 -1 10M16 -23Q23 -4 17 11" fill="none" stroke="#8ed47f" stroke-width="1.3" opacity=".34"/>
+      </g>
+    </g></g>
   </g></g>
 </g></g>
 </g></g></g></g>'''
