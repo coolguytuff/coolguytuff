@@ -6,6 +6,7 @@ on:
       - "README.md"
       - "assets/**"
       - "scripts/**"
+      - "tests/**"
       - ".github/workflows/**"
   push:
     branches:
@@ -14,6 +15,7 @@ on:
       - "README.md"
       - "assets/**"
       - "scripts/**"
+      - "tests/**"
       - ".github/workflows/**"
   workflow_dispatch:
 
@@ -28,8 +30,13 @@ jobs:
       - name: Check out profile repository
         uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
 
-      - name: Compile telemetry generator
-        run: python3 -m py_compile scripts/generate_telemetry.py
+      - name: Compile generators
+        run: |
+          python3 -m py_compile scripts/generate_telemetry.py
+          python3 -m py_compile scripts/generate_activity_world.py
+
+      - name: Test Activity World generator
+        run: python3 -m unittest tests.test_generate_activity_world -v
 
       - name: Validate local assets and README references
         run: |
@@ -41,7 +48,9 @@ jobs:
           root = Path('.')
           readme = (root / 'README.md').read_text(encoding='utf-8')
           required = [
+              root / 'assets/identity-headboard.svg',
               root / 'assets/dave-command-core.svg',
+              root / 'assets/activity-world.svg',
               root / 'assets/execution-loop.svg',
               root / 'assets/tool-deck.svg',
               root / 'assets/telemetry.svg',
@@ -53,12 +62,9 @@ jobs:
 
           image_sources = re.findall(r'(?:src|srcset)="([^"\s]+)', readme)
           assert image_sources, 'README contains no image sources'
-          allowed_snake = 'https://raw.githubusercontent.com/coolguytuff/coolguytuff/output/'
           for source in image_sources:
-              if source.startswith('./'):
-                  assert (root / source[2:]).is_file(), f'broken local README asset reference: {source}'
-              else:
-                  assert source.startswith(allowed_snake), f'unapproved external profile image source: {source}'
+              assert source.startswith('./'), f'unapproved external profile image source: {source}'
+              assert (root / source[2:]).is_file(), f'broken local README asset reference: {source}'
 
           image_tags = re.findall(r'<img\b[^>]*>', readme, flags=re.IGNORECASE)
           assert image_tags, 'README contains no img tags'
@@ -80,13 +86,39 @@ jobs:
           assert '@gmail.com' not in readme.lower(), 'personal Gmail address must not appear in README'
           assert 'dave-agent-os' not in readme, 'private Dave repository name must not be linked from README'
 
-          displayed_local_svgs = {root / source[2:] for source in image_sources if source.startswith('./') and source.endswith('.svg')}
+          hierarchy = [
+              './assets/identity-headboard.svg',
+              './assets/dave-command-core.svg',
+              './assets/activity-world.svg',
+              '## `03 // SIGNAL`',
+          ]
+          offsets = [readme.index(marker) for marker in hierarchy]
+          assert offsets == sorted(offsets), f'profile hero hierarchy regressed: {list(zip(hierarchy, offsets))}'
+
+          displayed_local_svgs = {root / source[2:] for source in image_sources if source.endswith('.svg')}
           for path in displayed_local_svgs | set((root / 'assets').glob('*.svg')):
               text = path.read_text(encoding='utf-8')
               ET.fromstring(text)
               lower = text.lower()
               assert '<script' not in lower, f'script element not allowed in {path}'
               assert 'javascript:' not in lower, f'javascript URL not allowed in {path}'
+              assert not re.search(r'\bon[a-z]+\s*=', lower), f'inline SVG event handler not allowed in {path}'
+
+          headboard = (root / 'assets/identity-headboard.svg').read_text(encoding='utf-8')
+          assert 'AARON SLUTSKY' in headboard
+          assert '@coolguytuff' in headboard
+          assert 'sponge-cameo' in headboard and 'platypus-cameo' in headboard
+
+          activity = (root / 'assets/activity-world.svg').read_text(encoding='utf-8')
+          for marker in (
+              'BRICK_ROUTE_FORWARD',
+              'BRICK_ROUTE_REVERSE',
+              'BRICK_STATE_JUMP',
+              'BRICK_STATE_CLIMB',
+              'BRICK_STATE_SPRINT',
+              'COLUMN_SETTLE',
+          ):
+              assert marker in activity, f'Activity World lost required choreography marker: {marker}'
 
           telemetry = (root / 'assets/telemetry.svg').read_text(encoding='utf-8')
           percentages = [int(value) for value in re.findall(r'>(\d+)%</text>', telemetry)]
@@ -95,7 +127,7 @@ jobs:
           dave = (root / 'assets/dave-command-core.svg').read_text(encoding='utf-8')
           assert '<animate' in dave, 'Dave core lost its SVG animation'
           assert 'dur="28s"' in dave, 'Dave core lost the slow horizontal turntable cycle'
-          print(f'validated {len(image_sources)} README image sources, {len(displayed_local_svgs)} displayed local SVGs, and accessibility/safety invariants')
+          print(f'validated {len(image_sources)} README image sources, {len(displayed_local_svgs)} displayed local SVGs, hierarchy, accessibility, and SVG safety')
           PY
 
       - name: Generate telemetry against GitHub API
@@ -130,10 +162,23 @@ jobs:
             echo 'Found a forbidden mutable or overly broad workflow pattern.' >&2
             exit 1
           fi
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          for workflow in (Path('.github/workflows/profile-assets.yml'), Path('.github/workflows/snake.yml')):
+              text = workflow.read_text(encoding='utf-8')
+              for line in text.splitlines():
+                  stripped = line.strip()
+                  if not stripped.startswith('uses:'):
+                      continue
+                  ref = stripped.split('@', 1)[-1]
+                  assert re.fullmatch(r'[0-9a-f]{40}', ref), f'unpinned action reference in {workflow}: {stripped}'
+          PY
           grep -Fq 'contents: read' .github/workflows/profile-assets.yml
           grep -Fq 'contents: read' .github/workflows/snake.yml
           grep -Fq 'contents: write' .github/workflows/profile-assets.yml
           grep -Fq 'contents: write' .github/workflows/snake.yml
-          grep -Fq 'git add -- profile-3d-contrib assets/telemetry.svg' .github/workflows/profile-assets.yml
+          grep -Fq 'git add -- profile-3d-contrib assets/telemetry.svg assets/activity-world.svg' .github/workflows/profile-assets.yml
           grep -Fq 'git add -- github-contribution-grid-snake.svg github-contribution-grid-snake-dark.svg' .github/workflows/snake.yml
           echo 'workflow hardening invariants validated'
