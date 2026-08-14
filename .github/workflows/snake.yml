@@ -11,7 +11,7 @@ on:
       - ".github/workflows/snake.yml"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: contribution-snake
@@ -21,6 +21,8 @@ jobs:
   generate:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read
     steps:
       - name: Check out profile repository
         uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
@@ -33,12 +35,35 @@ jobs:
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark&color_snake=#7ff0ff
 
+      - name: Package generated snake
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: generated-contribution-snake
+          path: dist/*.svg
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    needs: generate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Check out profile repository
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+
+      - name: Download generated snake
+        uses: actions/download-artifact@484a0b528fb4d7bd804637ccb632e47a0e638317
+        with:
+          name: generated-contribution-snake
+          path: /tmp/profile-snake
+
       - name: Publish only generated SVGs to output branch
         run: |
           set -euo pipefail
-          mkdir -p /tmp/profile-snake
-          cp dist/github-contribution-grid-snake.svg /tmp/profile-snake/
-          cp dist/github-contribution-grid-snake-dark.svg /tmp/profile-snake/
+          test -f /tmp/profile-snake/github-contribution-grid-snake.svg
+          test -f /tmp/profile-snake/github-contribution-grid-snake-dark.svg
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
