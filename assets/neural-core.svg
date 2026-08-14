@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" role="img" aria-label="Animated neural core visualization">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#020617"/>
+      <stop offset="45%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+    <radialGradient id="core" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="20%" stop-color="#93c5fd"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="80%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#020617" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0"/>
+      <stop offset="45%" stop-color="#38bdf8" stop-opacity=".9"/>
+      <stop offset="55%" stop-color="#a78bfa" stop-opacity=".95"/>
+      <stop offset="100%" stop-color="#c084fc" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"/></filter>
+  </defs>
+
+  <rect width="1200" height="520" rx="28" fill="url(#bg)"/>
+  <g opacity=".18" stroke="#60a5fa" stroke-width="1">
+    <path d="M0 80H1200M0 160H1200M0 240H1200M0 320H1200M0 400H1200M0 480H1200"/>
+    <path d="M80 0V520M160 0V520M240 0V520M320 0V520M400 0V520M480 0V520M560 0V520M640 0V520M720 0V520M800 0V520M880 0V520M960 0V520M1040 0V520M1120 0V520"/>
+  </g>
+
+  <g transform="translate(600 260)">
+    <g opacity=".72" stroke="url(#beam)" fill="none">
+      <ellipse rx="330" ry="118" stroke-width="2.2" transform="rotate(-10)">
+        <animateTransform attributeName="transform" type="rotate" values="-10;350" dur="18s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse rx="255" ry="190" stroke-width="1.7" transform="rotate(37)">
+        <animateTransform attributeName="transform" type="rotate" values="37;-323" dur="24s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse rx="190" ry="245" stroke-width="1.2" transform="rotate(72)">
+        <animateTransform attributeName="transform" type="rotate" values="72;432" dur="28s" repeatCount="indefinite"/>
+      </ellipse>
+    </g>
+
+    <g opacity=".45" stroke="#38bdf8" stroke-width="1.5">
+      <path d="M-420 0L-120 -88L0 0L126 91L430 8"/>
+      <path d="M-365 158L-138 70L0 0L152 -72L376 -160"/>
+      <path d="M-310 -178L-105 -66L0 0L116 -38L312 172"/>
+    </g>
+
+    <g fill="#60a5fa" filter="url(#glow)">
+      <circle cx="-420" cy="0" r="7"><animate attributeName="r" values="5;9;5" dur="2.6s" repeatCount="indefinite"/></circle>
+      <circle cx="-365" cy="158" r="6"><animate attributeName="opacity" values=".35;1;.35" dur="3.1s" repeatCount="indefinite"/></circle>
+      <circle cx="-310" cy="-178" r="5"><animate attributeName="opacity" values="1;.25;1" dur="2.2s" repeatCount="indefinite"/></circle>
+      <circle cx="430" cy="8" r="7"><animate attributeName="r" values="6;10;6" dur="3.4s" repeatCount="indefinite"/></circle>
+      <circle cx="376" cy="-160" r="5"><animate attributeName="opacity" values=".25;1;.25" dur="2.8s" repeatCount="indefinite"/></circle>
+      <circle cx="312" cy="172" r="6"><animate attributeName="opacity" values="1;.3;1" dur="2.4s" repeatCount="indefinite"/></circle>
+    </g>
+
+    <circle r="112" fill="url(#core)" opacity=".34" filter="url(#soft)">
+      <animate attributeName="r" values="105;126;105" dur="4.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values=".22;.52;.22" dur="4.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="73" fill="none" stroke="#60a5fa" stroke-width="2.5" filter="url(#glow)">
+      <animate attributeName="r" values="68;78;68" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="42" fill="#0b1220" stroke="#a78bfa" stroke-width="2"/>
+    <circle r="14" fill="#f8fafc" filter="url(#glow)">
+      <animate attributeName="r" values="10;16;10" dur="2.2s" repeatCount="indefinite"/>
+    </circle>
+
+    <g font-family="monospace" text-anchor="middle">
+      <text y="-205" fill="#93c5fd" font-size="18" letter-spacing="4">AARON // NEURAL CORE</text>
+      <text y="226" fill="#64748b" font-size="13" letter-spacing="3">REASON • ORCHESTRATE • EXECUTE • EVALUATE • IMPROVE</text>
+    </g>
+  </g>
+
+  <g fill="#38bdf8" opacity=".7">
+    <circle cx="96" cy="76" r="2"><animate attributeName="opacity" values=".15;1;.15" dur="1.8s" repeatCount="indefinite"/></circle>
+    <circle cx="1080" cy="92" r="2"><animate attributeName="opacity" values="1;.15;1" dur="2.6s" repeatCount="indefinite"/></circle>
+    <circle cx="1015" cy="442" r="2"><animate attributeName="opacity" values=".2;1;.2" dur="2.1s" repeatCount="indefinite"/></circle>
+    <circle cx="155" cy="438" r="2"><animate attributeName="opacity" values="1;.2;1" dur="2.9s" repeatCount="indefinite"/></circle>
+  </g>
+</svg>
