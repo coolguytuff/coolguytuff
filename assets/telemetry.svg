@@ -10,17 +10,59 @@
   <text x="42" y="52" fill="#d8faff" font-size="18" font-weight="700" letter-spacing="3">GITHUB // TELEMETRY</text>
   <text x="42" y="75" fill="#64748b" font-size="9.5" letter-spacing="1.8">SELF-HOSTED PROFILE DATA • REFRESHED BY GITHUB ACTIONS</text>
   <text x="1158" y="52" text-anchor="end" fill="#6ee7b7" font-size="10" letter-spacing="1.8">● PUBLIC API OK</text>
-  <g transform="translate(40 104)"><rect width="260" height="132" rx="15" fill="#07111f" fill-opacity=".86" stroke="#7ff0ff" stroke-opacity=".32"/><path d="M0 35H260" stroke="#7ff0ff" stroke-opacity=".10"/><text x="18" y="24" fill="#7f91a8" font-size="10" letter-spacing="2">PUBLIC REPOS</text><text x="18" y="82" fill="#7ff0ff" font-size="35" font-weight="700">7</text><text x="18" y="110" fill="#5f7288" font-size="9.5" letter-spacing="1.4">VISIBLE BUILDS</text></g>
-  <g transform="translate(318 104)"><rect width="260" height="132" rx="15" fill="#07111f" fill-opacity=".86" stroke="#4a7bff" stroke-opacity=".32"/><path d="M0 35H260" stroke="#4a7bff" stroke-opacity=".10"/><text x="18" y="24" fill="#7f91a8" font-size="10" letter-spacing="2">ORIGINAL</text><text x="18" y="82" fill="#4a7bff" font-size="35" font-weight="700">2</text><text x="18" y="110" fill="#5f7288" font-size="9.5" letter-spacing="1.4">NON-FORK REPOS</text></g>
-  <g transform="translate(596 104)"><rect width="260" height="132" rx="15" fill="#07111f" fill-opacity=".86" stroke="#a78bfa" stroke-opacity=".32"/><path d="M0 35H260" stroke="#a78bfa" stroke-opacity=".10"/><text x="18" y="24" fill="#7f91a8" font-size="10" letter-spacing="2">FORKED LABS</text><text x="18" y="82" fill="#a78bfa" font-size="35" font-weight="700">5</text><text x="18" y="110" fill="#5f7288" font-size="9.5" letter-spacing="1.4">EXPLORATION</text></g>
-  <g transform="translate(874 104)"><rect width="260" height="132" rx="15" fill="#07111f" fill-opacity=".86" stroke="#f472d0" stroke-opacity=".32"/><path d="M0 35H260" stroke="#f472d0" stroke-opacity=".10"/><text x="18" y="24" fill="#7f91a8" font-size="10" letter-spacing="2">LAST PUSH</text><text x="18" y="82" fill="#f472d0" font-size="35" font-weight="700">AUG 14</text><text x="18" y="110" fill="#5f7288" font-size="9.5" letter-spacing="1.4">PUBLIC ACTIVITY</text></g>
+  <g transform="translate(40 104)">
+  <rect width="260" height="132" rx="15" fill="#07111f" fill-opacity=".86" stroke="#7ff0ff" stroke-opacity=".32"/>
+  <path d="M0 35H260" stroke="#7ff0ff" stroke-opacity=".10"/>
+  <text x="18" y="24" fill="#7f91a8" font-size="10" letter-spacing="2">PUBLIC REPOS</text>
+  <text x="18" y="82" fill="#7ff0ff" font-size="35" font-weight="700">7</text>
+  <text x="18" y="110" fill="#5f7288" font-size="9.5" letter-spacing="1.4">VISIBLE BUILDS</text>
+</g><g transform="translate(318 104)">
+  <rect width="260" height="132" rx="15" fill="#07111f" fill-opacity=".86" stroke="#4a7bff" stroke-opacity=".32"/>
+  <path d="M0 35H260" stroke="#4a7bff" stroke-opacity=".10"/>
+  <text x="18" y="24" fill="#7f91a8" font-size="10" letter-spacing="2">ORIGINAL</text>
+  <text x="18" y="82" fill="#4a7bff" font-size="35" font-weight="700">2</text>
+  <text x="18" y="110" fill="#5f7288" font-size="9.5" letter-spacing="1.4">NON-FORK REPOS</text>
+</g><g transform="translate(596 104)">
+  <rect width="260" height="132" rx="15" fill="#07111f" fill-opacity=".86" stroke="#a78bfa" stroke-opacity=".32"/>
+  <path d="M0 35H260" stroke="#a78bfa" stroke-opacity=".10"/>
+  <text x="18" y="24" fill="#7f91a8" font-size="10" letter-spacing="2">FORKED LABS</text>
+  <text x="18" y="82" fill="#a78bfa" font-size="35" font-weight="700">5</text>
+  <text x="18" y="110" fill="#5f7288" font-size="9.5" letter-spacing="1.4">EXPLORATION</text>
+</g><g transform="translate(874 104)">
+  <rect width="260" height="132" rx="15" fill="#07111f" fill-opacity=".86" stroke="#f472d0" stroke-opacity=".32"/>
+  <path d="M0 35H260" stroke="#f472d0" stroke-opacity=".10"/>
+  <text x="18" y="24" fill="#7f91a8" font-size="10" letter-spacing="2">LAST PUSH</text>
+  <text x="18" y="82" fill="#f472d0" font-size="35" font-weight="700">AUG 14</text>
+  <text x="18" y="110" fill="#5f7288" font-size="9.5" letter-spacing="1.4">PUBLIC ACTIVITY</text>
+</g>
   <text x="42" y="272" fill="#7ff0ff" font-size="10.5" letter-spacing="2.2">LANGUAGE SIGNAL // PUBLIC REPO CONTENT</text>
-  <g><text x="42" y="306" fill="#bac7d8" font-size="11.5">TYPESCRIPT</text><rect x="190" y="294" width="650" height="12" rx="6" fill="#0c1725"/><rect x="190" y="294" width="537" height="12" rx="6" fill="#7ff0ff" fill-opacity=".72"/><text x="868" y="306" fill="#71849a" font-size="10">83%</text></g>
-  <g><text x="42" y="348" fill="#bac7d8" font-size="11.5">JAVASCRIPT</text><rect x="190" y="336" width="650" height="12" rx="6" fill="#0c1725"/><rect x="190" y="336" width="83" height="12" rx="6" fill="#4a7bff" fill-opacity=".72"/><text x="868" y="348" fill="#71849a" font-size="10">13%</text></g>
-  <g><text x="42" y="390" fill="#bac7d8" font-size="11.5">RUST</text><rect x="190" y="378" width="650" height="12" rx="6" fill="#0c1725"/><rect x="190" y="378" width="55" height="12" rx="6" fill="#a78bfa" fill-opacity=".72"/><text x="868" y="390" fill="#71849a" font-size="10">3%</text></g>
-  <g><text x="42" y="432" fill="#bac7d8" font-size="11.5">SHELL</text><rect x="190" y="420" width="650" height="12" rx="6" fill="#0c1725"/><rect x="190" y="420" width="55" height="12" rx="6" fill="#f472d0" fill-opacity=".72"/><text x="868" y="432" fill="#71849a" font-size="10">1%</text></g>
+  <g>
+  <text x="42" y="306" fill="#bac7d8" font-size="11.5">TYPESCRIPT</text>
+  <rect x="190" y="294" width="650" height="12" rx="6" fill="#0c1725"/>
+  <rect x="190" y="294" width="537" height="12" rx="6" fill="#7ff0ff" fill-opacity=".72"/>
+  <text x="868" y="306" fill="#71849a" font-size="10">83%</text>
+</g><g>
+  <text x="42" y="348" fill="#bac7d8" font-size="11.5">JAVASCRIPT</text>
+  <rect x="190" y="336" width="650" height="12" rx="6" fill="#0c1725"/>
+  <rect x="190" y="336" width="83" height="12" rx="6" fill="#4a7bff" fill-opacity=".72"/>
+  <text x="868" y="348" fill="#71849a" font-size="10">13%</text>
+</g><g>
+  <text x="42" y="390" fill="#bac7d8" font-size="11.5">RUST</text>
+  <rect x="190" y="378" width="650" height="12" rx="6" fill="#0c1725"/>
+  <rect x="190" y="378" width="55" height="12" rx="6" fill="#a78bfa" fill-opacity=".72"/>
+  <text x="868" y="390" fill="#71849a" font-size="10">3%</text>
+</g><g>
+  <text x="42" y="432" fill="#bac7d8" font-size="11.5">SHELL</text>
+  <rect x="190" y="420" width="650" height="12" rx="6" fill="#0c1725"/>
+  <rect x="190" y="420" width="55" height="12" rx="6" fill="#f472d0" fill-opacity=".72"/>
+  <text x="868" y="432" fill="#71849a" font-size="10">1%</text>
+</g>
   <rect x="914" y="286" width="244" height="160" rx="14" fill="#07111f" fill-opacity=".78" stroke="#315b7e" stroke-opacity=".38"/>
-  <text x="934" y="314" fill="#7f91a8" font-size="9.5" letter-spacing="1.7">CURRENT VECTOR</text><text x="934" y="346" fill="#d8faff" font-size="14" font-weight="700">AI SYSTEMS</text><text x="934" y="372" fill="#7ff0ff" font-size="10">AGENTS / AUTOMATION</text><text x="934" y="398" fill="#a78bfa" font-size="10">ORCHESTRATION / EVALS</text><text x="934" y="424" fill="#6ee7b7" font-size="10">BUILDING / ITERATING</text>
+  <text x="934" y="314" fill="#7f91a8" font-size="9.5" letter-spacing="1.7">CURRENT VECTOR</text>
+  <text x="934" y="346" fill="#d8faff" font-size="14" font-weight="700">AI SYSTEMS</text>
+  <text x="934" y="372" fill="#7ff0ff" font-size="10">AGENTS / AUTOMATION</text>
+  <text x="934" y="398" fill="#a78bfa" font-size="10">ORCHESTRATION / EVALS</text>
+  <text x="934" y="424" fill="#6ee7b7" font-size="10">BUILDING / ITERATING</text>
   <text x="42" y="482" fill="#53657a" font-size="9.5" letter-spacing="1.4">NO THIRD-PARTY STATS CARD REQUIRED // IF THE API FAILS, THIS PANEL DEGRADES INTENTIONALLY</text>
 </g>
 <rect x="1" y="1" width="1198" height="508" rx="25" fill="none" stroke="url(#edge)" stroke-opacity=".48"/>
