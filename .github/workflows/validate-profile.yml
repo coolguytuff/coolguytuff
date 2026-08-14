@@ -51,11 +51,19 @@ jobs:
           for path in required:
               assert path.is_file(), f'missing required asset: {path}'
 
-          local_refs = set(re.findall(r'(?:src|srcset)="\./([^"\s]+)', readme))
-          assert local_refs, 'README contains no local asset references'
-          for relative in sorted(local_refs):
-              path = root / relative
-              assert path.is_file(), f'broken local README asset reference: {relative}'
+          image_sources = re.findall(r'(?:src|srcset)="([^"\s]+)', readme)
+          assert image_sources, 'README contains no image sources'
+          allowed_snake = 'https://raw.githubusercontent.com/coolguytuff/coolguytuff/output/'
+          for source in image_sources:
+              if source.startswith('./'):
+                  assert (root / source[2:]).is_file(), f'broken local README asset reference: {source}'
+              else:
+                  assert source.startswith(allowed_snake), f'unapproved external profile image source: {source}'
+
+          image_tags = re.findall(r'<img\b[^>]*>', readme, flags=re.IGNORECASE)
+          assert image_tags, 'README contains no img tags'
+          for tag in image_tags:
+              assert re.search(r'\balt="[^\"]+"', tag), f'image missing useful alt text: {tag}'
 
           banned = [
               'github-readme-stats.vercel.app',
@@ -72,17 +80,22 @@ jobs:
           assert '@gmail.com' not in readme.lower(), 'personal Gmail address must not appear in README'
           assert 'dave-agent-os' not in readme, 'private Dave repository name must not be linked from README'
 
-          for path in (root / 'assets').glob('*.svg'):
+          displayed_local_svgs = {root / source[2:] for source in image_sources if source.startswith('./') and source.endswith('.svg')}
+          for path in displayed_local_svgs | set((root / 'assets').glob('*.svg')):
               text = path.read_text(encoding='utf-8')
               ET.fromstring(text)
               lower = text.lower()
               assert '<script' not in lower, f'script element not allowed in {path}'
               assert 'javascript:' not in lower, f'javascript URL not allowed in {path}'
 
+          telemetry = (root / 'assets/telemetry.svg').read_text(encoding='utf-8')
+          percentages = [int(value) for value in re.findall(r'>(\d+)%</text>', telemetry)]
+          assert percentages and sum(percentages) == 100, f'checked-in telemetry percentages must total 100, got {percentages}'
+
           dave = (root / 'assets/dave-command-core.svg').read_text(encoding='utf-8')
           assert '<animate' in dave, 'Dave core lost its SVG animation'
           assert 'dur="28s"' in dave, 'Dave core lost the slow horizontal turntable cycle'
-          print(f'validated {len(local_refs)} local README asset references and SVG safety')
+          print(f'validated {len(image_sources)} README image sources, {len(displayed_local_svgs)} displayed local SVGs, and accessibility/safety invariants')
           PY
 
       - name: Generate telemetry against GitHub API
@@ -105,6 +118,7 @@ jobs:
           if percentages:
               assert sum(percentages) == 100, f'language percentages sum to {sum(percentages)}, expected 100'
           assert '<script' not in text.lower()
+          assert 'javascript:' not in text.lower()
           print('generated telemetry is valid; language percentages:', percentages)
           PY
 
