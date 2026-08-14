@@ -1,28 +1,69 @@
 <!--
-  AARON SLUTSKY // coolguytuff
+  AARON SLUTSKY // @coolguytuff
   DAVE COMMAND PROFILE
   Primary visuals are self-hosted in this repository.
 -->
 
-<div align="center">
-
-# Aaron Slutsky
-
-**AI systems · autonomous agents · automation · experimental software**
-
-`coolguytuff` &nbsp; // &nbsp; building software that can carry an objective forward, not just answer a prompt
-
-</div>
+<p align="center">
+  <img width="100%" src="./assets/identity-headboard.svg" alt="Aaron Slutsky — @coolguytuff — animated identity command headboard" />
+</p>
 
 <p align="center">
   <img width="100%" src="./assets/dave-command-core.svg" alt="Dave Command Core — Aaron's animated pseudo-3D personal Agent OS visualization" />
 </p>
 
-<p align="center"><sub><b>DAVE // PRIVATE R&D</b> · the core rotates slowly in pseudo-3D using GitHub-safe SVG animation — no JavaScript, no separate site</sub></p>
+<p align="center"><sub><b>DAVE // PRIVATE R&D</b> · slow pseudo-3D turntable motion · GitHub-native SVG · no JavaScript · no separate site</sub></p>
+
+## `01 // DAVE`
+
+> **Dave** is my private experimental **Personal Agent OS** — an attempt to make one coherent system out of identity, context, agents, teams, tools, execution, evaluation, governance, and recovery.
+
+<table>
+<tr>
+<td width="33%" valign="top"><b>IDENTITY</b><br/><sub>Persistent context and a stable system identity across work.</sub></td>
+<td width="33%" valign="top"><b>EXECUTION</b><br/><sub>Agents and teams that can carry long-running objectives through tools and workflows.</sub></td>
+<td width="33%" valign="top"><b>GOVERNANCE</b><br/><sub>Authority, routing, safety, evidence, and recovery are system properties — not afterthoughts.</sub></td>
+</tr>
+<tr>
+<td width="33%" valign="top"><b>EVALUATION</b><br/><sub>Outcomes are observed and judged instead of assumed successful.</sub></td>
+<td width="33%" valign="top"><b>LOCAL-FIRST</b><br/><sub>Use local capability where it is appropriate, with explicit routing and graceful fallback.</sub></td>
+<td width="33%" valign="top"><b>EVOLUTION</b><br/><sub>Capabilities can improve through governed experimentation rather than uncontrolled self-modification.</sub></td>
+</tr>
+</table>
+
+<sub>The repository is private while I build it. This profile describes the direction at a high level, not private implementation details.</sub>
 
 ---
 
-## `01 // SIGNAL`
+## `02 // ACTIVITY WORLD`
+
+<div align="center">
+
+**My contribution history, turned into terrain.** BRICK is an original cyber-gel runner that crosses the real activity signal in both directions: jumping rough transitions, pulling himself onto small rises, sprinting flat runs, and making the columns wobble before they settle back to their data-derived heights.
+
+<p>
+  <img width="100%" src="./assets/activity-world.svg" alt="Animated Activity World where BRICK traverses contribution-derived terrain with jumping, climbing, sprinting, turnarounds, and gel-like column reactions" />
+</p>
+
+<sub>`BRICK // terrain-aware traversal // forward + reverse // generated from contribution data`</sub>
+
+<br/><br/>
+
+**Full contribution topology**
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./profile-3d-contrib/profile-night-rainbow.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="./profile-3d-contrib/profile-gitblock.svg" />
+  <img width="100%" src="./profile-3d-contrib/profile-night-rainbow.svg" alt="3D GitHub contribution topology generated from the full contribution history" />
+</picture>
+
+<sub>`3D HISTORY MAP // generated in-repo by GitHub Actions // theme-aware`</sub>
+
+</div>
+
+---
+
+## `03 // SIGNAL`
 
 I’m interested in the point where AI stops being a chat box and starts becoming a **system**: persistent context, tools, planning, execution, evidence, evaluation, recovery, coordination, and actual completion.
 
@@ -56,50 +97,11 @@ I’m interested in the point where AI stops being a chat box and starts becomin
 
 ---
 
-## `02 // DAVE`
-
-> **Dave** is my private experimental **Personal Agent OS** — an attempt to make one coherent system out of identity, context, agents, teams, tools, execution, evaluation, governance, and recovery.
-
-<table>
-<tr>
-<td width="33%" valign="top"><b>IDENTITY</b><br/><sub>Persistent context and a stable system identity across work.</sub></td>
-<td width="33%" valign="top"><b>EXECUTION</b><br/><sub>Agents and teams that can carry long-running objectives through tools and workflows.</sub></td>
-<td width="33%" valign="top"><b>GOVERNANCE</b><br/><sub>Authority, routing, safety, evidence, and recovery are system properties — not afterthoughts.</sub></td>
-</tr>
-<tr>
-<td width="33%" valign="top"><b>EVALUATION</b><br/><sub>Outcomes are observed and judged instead of assumed successful.</sub></td>
-<td width="33%" valign="top"><b>LOCAL-FIRST</b><br/><sub>Use local capability where it is appropriate, with explicit routing and graceful fallback.</sub></td>
-<td width="33%" valign="top"><b>EVOLUTION</b><br/><sub>Capabilities can improve through governed experimentation rather than uncontrolled self-modification.</sub></td>
-</tr>
-</table>
-
-<sub>The repository is private while I build it. This profile describes the direction at a high level, not private implementation details.</sub>
-
----
-
-## `03 // EXECUTION LOOP`
+## `04 // EXECUTION LOOP`
 
 <p align="center">
   <img width="100%" src="./assets/execution-loop.svg" alt="Closed-loop execution: intent, reason, plan, act, evidence, evaluate, ship or repair" />
 </p>
-
----
-
-## `04 // ACTIVITY TOPOLOGY`
-
-<div align="center">
-
-**GitHub activity rendered as a 3D contribution landscape.** Every column is part of the history — built, tested, changed, broken, fixed, or learned.
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./profile-3d-contrib/profile-night-rainbow.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="./profile-3d-contrib/profile-gitblock.svg" />
-  <img width="100%" src="./profile-3d-contrib/profile-night-rainbow.svg" alt="3D GitHub contribution topology" />
-</picture>
-
-<sub>`3D RENDER // generated in-repo by GitHub Actions // theme-aware`</sub>
-
-</div>
 
 ---
 
@@ -177,27 +179,11 @@ Public GitHub is only one slice of what I’m working on. I keep forked research
   <img width="100%" src="./assets/telemetry.svg" alt="Self-hosted GitHub telemetry including public repositories, repository mix, latest public activity, and language distribution" />
 </p>
 
-<sub>Unlike the old stat-card setup, this panel is generated into the repo itself. If the GitHub API is temporarily unavailable, it renders an intentional degraded state instead of broken linked image text.</sub>
+<sub>This panel is generated into the repo itself. If the GitHub API is temporarily unavailable, it renders an intentional degraded state instead of broken linked-image text.</sub>
 
 ---
 
-## `09 // CONTRIBUTION CREATURE`
-
-<div align="center">
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/coolguytuff/coolguytuff/output/github-contribution-grid-snake-dark.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/coolguytuff/coolguytuff/output/github-contribution-grid-snake.svg" />
-  <img width="100%" alt="Animated contribution snake" src="https://raw.githubusercontent.com/coolguytuff/coolguytuff/output/github-contribution-grid-snake-dark.svg" />
-</picture>
-
-<sub>`the only creature in the lab allowed to eat the commit graph`</sub>
-
-</div>
-
----
-
-## `10 // OPERATING PRINCIPLES`
+## `09 // OPERATING PRINCIPLES`
 
 ```text
 01  build the real thing, not a demo of the thing
