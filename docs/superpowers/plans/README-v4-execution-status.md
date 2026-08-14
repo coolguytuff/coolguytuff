@@ -1,0 +1,1 @@
+TITAN v4 implementation is on branch `profile/titan-rig-physics-v4`. Local pre-push verification completed with 8/8 tests passing. Integration proceeds through PR + GitHub Actions before merge.
