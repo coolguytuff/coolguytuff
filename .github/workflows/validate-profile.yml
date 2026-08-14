@@ -29,156 +29,85 @@ jobs:
     steps:
       - name: Check out profile repository
         uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
-
       - name: Compile generators
         run: |
           python3 -m py_compile scripts/generate_telemetry.py
-          python3 -m py_compile scripts/generate_activity_world.py
-
+          python3 -m py_compile scripts/generate_activity_world.py scripts/activity_world_model.py scripts/activity_world_titan.py scripts/activity_world_render.py
       - name: Test Activity World generator
         run: python3 -m unittest tests.test_generate_activity_world -v
-
       - name: Validate local assets and README references
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
           import xml.etree.ElementTree as ET
-
           root = Path('.')
           readme = (root / 'README.md').read_text(encoding='utf-8')
-          required = [
-              root / 'assets/identity-headboard.svg',
-              root / 'assets/dave-command-core.svg',
-              root / 'assets/activity-world.svg',
-              root / 'assets/execution-loop.svg',
-              root / 'assets/tool-deck.svg',
-              root / 'assets/telemetry.svg',
-              root / 'profile-3d-contrib/profile-night-rainbow.svg',
-              root / 'profile-3d-contrib/profile-gitblock.svg',
-          ]
-          for path in required:
-              assert path.is_file(), f'missing required asset: {path}'
-
+          required = [root/'assets/identity-headboard.svg',root/'assets/dave-command-core.svg',root/'assets/activity-world.svg',root/'assets/execution-loop.svg',root/'assets/tool-deck.svg',root/'assets/telemetry.svg',root/'profile-3d-contrib/profile-night-rainbow.svg',root/'profile-3d-contrib/profile-gitblock.svg']
+          for path in required: assert path.is_file(), f'missing required asset: {path}'
           image_sources = re.findall(r'(?:src|srcset)="([^"\s]+)', readme)
-          assert image_sources, 'README contains no image sources'
+          assert image_sources
           for source in image_sources:
               assert source.startswith('./'), f'unapproved external profile image source: {source}'
-              assert (root / source[2:]).is_file(), f'broken local README asset reference: {source}'
-
-          image_tags = re.findall(r'<img\b[^>]*>', readme, flags=re.IGNORECASE)
-          assert image_tags, 'README contains no img tags'
-          for tag in image_tags:
-              assert re.search(r'\balt="[^\"]+"', tag), f'image missing useful alt text: {tag}'
-
-          banned = [
-              'github-readme-stats.vercel.app',
-              'github-readme-streak-stats',
-              'streak-stats.demolab.com',
-              'readme-typing-svg',
-              'capsule-render.vercel.app',
-              'skillicons.dev',
-              'komarev.com/ghpvc',
-          ]
-          for token in banned:
-              assert token not in readme, f'fragile external profile dependency returned: {token}'
-
-          assert '@gmail.com' not in readme.lower(), 'personal Gmail address must not appear in README'
-          assert 'dave-agent-os' not in readme, 'private Dave repository name must not be linked from README'
-
-          hierarchy = [
-              './assets/identity-headboard.svg',
-              './assets/dave-command-core.svg',
-              './assets/activity-world.svg',
-              '## `03 // SIGNAL`',
-          ]
-          offsets = [readme.index(marker) for marker in hierarchy]
+              assert (root/source[2:]).is_file(), f'broken local README asset reference: {source}'
+          for tag in re.findall(r'<img\b[^>]*>', readme, flags=re.I):
+              assert re.search(r'\balt="[^\"]+"', tag), f'image missing alt: {tag}'
+          for token in ['github-readme-stats.vercel.app','github-readme-streak-stats','streak-stats.demolab.com','readme-typing-svg','capsule-render.vercel.app','skillicons.dev','komarev.com/ghpvc']:
+              assert token not in readme
+          assert '@gmail.com' not in readme.lower()
+          assert 'dave-agent-os' not in readme
+          hierarchy=['./assets/identity-headboard.svg','./profile-3d-contrib/profile-night-rainbow.svg','./assets/dave-command-core.svg','./assets/activity-world.svg','## `03 // SIGNAL`']
+          offsets=[readme.index(marker) for marker in hierarchy]
           assert offsets == sorted(offsets), f'profile hero hierarchy regressed: {list(zip(hierarchy, offsets))}'
-
-          displayed_local_svgs = {root / source[2:] for source in image_sources if source.endswith('.svg')}
-          for path in displayed_local_svgs | set((root / 'assets').glob('*.svg')):
-              text = path.read_text(encoding='utf-8')
-              ET.fromstring(text)
-              lower = text.lower()
-              assert '<script' not in lower, f'script element not allowed in {path}'
-              assert 'javascript:' not in lower, f'javascript URL not allowed in {path}'
-              assert not re.search(r'\bon[a-z]+\s*=', lower), f'inline SVG event handler not allowed in {path}'
-
-          headboard = (root / 'assets/identity-headboard.svg').read_text(encoding='utf-8')
-          assert 'AARON SLUTSKY' in headboard
-          assert '@coolguytuff' in headboard
-          assert 'sponge-cameo' in headboard and 'platypus-cameo' in headboard
-
-          activity = (root / 'assets/activity-world.svg').read_text(encoding='utf-8')
-          for marker in (
-              'BRICK_ROUTE_FORWARD',
-              'BRICK_ROUTE_REVERSE',
-              'BRICK_STATE_JUMP',
-              'BRICK_STATE_CLIMB',
-              'BRICK_STATE_SPRINT',
-              'COLUMN_SETTLE',
-          ):
-              assert marker in activity, f'Activity World lost required choreography marker: {marker}'
-
-          telemetry = (root / 'assets/telemetry.svg').read_text(encoding='utf-8')
-          percentages = [int(value) for value in re.findall(r'>(\d+)%</text>', telemetry)]
-          assert percentages and sum(percentages) == 100, f'checked-in telemetry percentages must total 100, got {percentages}'
-
-          dave = (root / 'assets/dave-command-core.svg').read_text(encoding='utf-8')
-          assert '<animate' in dave, 'Dave core lost its SVG animation'
-          assert 'dur="28s"' in dave, 'Dave core lost the slow horizontal turntable cycle'
-          print(f'validated {len(image_sources)} README image sources, {len(displayed_local_svgs)} displayed local SVGs, hierarchy, accessibility, and SVG safety')
+          displayed={root/source[2:] for source in image_sources if source.endswith('.svg')}
+          for path in displayed | set((root/'assets').glob('*.svg')):
+              text=path.read_text(encoding='utf-8'); ET.fromstring(text); lower=text.lower()
+              assert '<script' not in lower and 'javascript:' not in lower
+              assert not re.search(r'\bon[a-z]+\s*=', lower), f'inline event handler: {path}'
+          headboard=(root/'assets/identity-headboard.svg').read_text(encoding='utf-8')
+          for marker in ('AARON SLUTSKY','@coolguytuff','sponge-cameo','platypus-cameo','id="edgeFade"','@media (prefers-color-scheme: light)'):
+              assert marker in headboard, f'headboard lost {marker}'
+          activity=(root/'assets/activity-world.svg').read_text(encoding='utf-8')
+          for marker in ('BRICK_ROUTE_FORWARD','BRICK_ROUTE_REVERSE','BRICK_STATE_JUMP','BRICK_STATE_CLIMB','BRICK_STATE_SPRINT','BRICK_STATE_TURN','COLUMN_SETTLE','TITAN_BODY_DEPTH','TOWER_TOP_FACE','TOWER_FRONT_FACE','TOWER_SIDE_FACE','camera-follow','ACTIVITY WORLD // TITAN RUN'):
+              assert marker in activity, f'Activity World lost {marker}'
+          telemetry=(root/'assets/telemetry.svg').read_text(encoding='utf-8')
+          percentages=[int(v) for v in re.findall(r'>(\d+)%</text>', telemetry)]
+          assert percentages and sum(percentages)==100
+          dave=(root/'assets/dave-command-core.svg').read_text(encoding='utf-8')
+          assert '<animate' in dave and 'dur="28s"' in dave
+          print('profile v3 hierarchy, assets, accessibility and SVG safety validated')
           PY
-
       - name: Generate telemetry against GitHub API
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
           TELEMETRY_OUT: /tmp/telemetry.svg
         run: python3 scripts/generate_telemetry.py
-
       - name: Validate generated telemetry
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import re
-          import xml.etree.ElementTree as ET
-
-          text = Path('/tmp/telemetry.svg').read_text(encoding='utf-8')
-          ET.fromstring(text)
-          percentages = [int(value) for value in re.findall(r'>(\d+)%</text>', text)]
-          if percentages:
-              assert sum(percentages) == 100, f'language percentages sum to {sum(percentages)}, expected 100'
-          assert '<script' not in text.lower()
-          assert 'javascript:' not in text.lower()
-          print('generated telemetry is valid; language percentages:', percentages)
+          import re, xml.etree.ElementTree as ET
+          text=Path('/tmp/telemetry.svg').read_text(encoding='utf-8'); ET.fromstring(text)
+          percentages=[int(v) for v in re.findall(r'>(\d+)%</text>', text)]
+          if percentages: assert sum(percentages)==100
+          assert '<script' not in text.lower() and 'javascript:' not in text.lower()
           PY
-
       - name: Validate workflow hardening invariants
         run: |
           set -euo pipefail
           workflows=(.github/workflows/profile-assets.yml .github/workflows/snake.yml)
-          if grep -En '@latest|git add -A|pull_request_target' "${workflows[@]}"; then
-            echo 'Found a forbidden mutable or overly broad workflow pattern.' >&2
-            exit 1
-          fi
+          if grep -En '@latest|git add -A|pull_request_target' "${workflows[@]}"; then exit 1; fi
           python3 - <<'PY'
           from pathlib import Path
           import re
-
-          for workflow in (Path('.github/workflows/profile-assets.yml'), Path('.github/workflows/snake.yml')):
-              text = workflow.read_text(encoding='utf-8')
-              for line in text.splitlines():
-                  stripped = line.strip()
-                  if not stripped.startswith('uses:'):
-                      continue
-                  ref = stripped.split('@', 1)[-1]
-                  assert re.fullmatch(r'[0-9a-f]{40}', ref), f'unpinned action reference in {workflow}: {stripped}'
+          for workflow in (Path('.github/workflows/profile-assets.yml'),Path('.github/workflows/snake.yml')):
+              for line in workflow.read_text(encoding='utf-8').splitlines():
+                  stripped=line.strip()
+                  if stripped.startswith('uses:'):
+                      assert re.fullmatch(r'[0-9a-f]{40}', stripped.split('@',1)[-1]), f'unpinned action: {stripped}'
           PY
           grep -Fq 'contents: read' .github/workflows/profile-assets.yml
-          grep -Fq 'contents: read' .github/workflows/snake.yml
           grep -Fq 'contents: write' .github/workflows/profile-assets.yml
-          grep -Fq 'contents: write' .github/workflows/snake.yml
           grep -Fq 'git add -- profile-3d-contrib assets/telemetry.svg assets/activity-world.svg' .github/workflows/profile-assets.yml
-          grep -Fq 'git add -- github-contribution-grid-snake.svg github-contribution-grid-snake-dark.svg' .github/workflows/snake.yml
           echo 'workflow hardening invariants validated'

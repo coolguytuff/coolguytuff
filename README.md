@@ -5,8 +5,26 @@
 -->
 
 <p align="center">
-  <img width="100%" src="./assets/identity-headboard.svg" alt="Aaron Slutsky — @coolguytuff — animated identity command headboard" />
+  <img width="100%" src="./assets/identity-headboard.svg" alt="Aaron Slutsky — @coolguytuff — seamless animated identity header" />
 </p>
+
+<div align="center">
+
+### `CONTRIBUTION MATRIX // 3D HISTORY`
+
+**The build history comes first.** Every block below is generated from my GitHub contribution graph.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./profile-3d-contrib/profile-night-rainbow.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="./profile-3d-contrib/profile-gitblock.svg" />
+  <img width="100%" src="./profile-3d-contrib/profile-night-rainbow.svg" alt="3D GitHub contribution topology generated from Aaron's contribution history" />
+</picture>
+
+<sub>`3D CONTRIBUTION TOPOLOGY // generated in-repo // theme-aware`</sub>
+
+</div>
+
+<br/>
 
 <p align="center">
   <img width="100%" src="./assets/dave-command-core.svg" alt="Dave Command Core — Aaron's animated pseudo-3D personal Agent OS visualization" />
@@ -39,25 +57,13 @@
 
 <div align="center">
 
-**My contribution history, turned into terrain.** BRICK is an original cyber-gel runner that crosses the real activity signal in both directions: jumping rough transitions, pulling himself onto small rises, sprinting flat runs, and making the columns wobble before they settle back to their data-derived heights.
+**The contribution graph becomes a world instead of a chart.** TITAN is an original green synthetic powerhouse running across contribution-derived 3D block terrain. Rough changes trigger leaps, modest rises trigger a ledge grab + pull-up, flat runs of 3+ blocks trigger a sprint, and every impact squishes the terrain before it settles exactly back to its real data height.
 
 <p>
-  <img width="100%" src="./assets/activity-world.svg" alt="Animated Activity World where BRICK traverses contribution-derived terrain with jumping, climbing, sprinting, turnarounds, and gel-like column reactions" />
+  <img width="100%" src="./assets/activity-world.svg" alt="Cinematic 3D Activity World where TITAN traverses contribution-derived block terrain by jumping, climbing, sprinting, turning around, and making columns wobble back to their data heights" />
 </p>
 
-<sub>`BRICK // terrain-aware traversal // forward + reverse // generated from contribution data`</sub>
-
-<br/><br/>
-
-**Full contribution topology**
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./profile-3d-contrib/profile-night-rainbow.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="./profile-3d-contrib/profile-gitblock.svg" />
-  <img width="100%" src="./profile-3d-contrib/profile-night-rainbow.svg" alt="3D GitHub contribution topology generated from the full contribution history" />
-</picture>
-
-<sub>`3D HISTORY MAP // generated in-repo by GitHub Actions // theme-aware`</sub>
+<sub>`TITAN // follow-cam traversal // forward + reverse // generated from real contribution signal`</sub>
 
 </div>
 
