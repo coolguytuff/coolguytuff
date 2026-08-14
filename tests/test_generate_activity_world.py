@@ -104,6 +104,20 @@ class ActivityWorldTests(unittest.TestCase):
             self.assertIn(marker,output)
         self.assertIn('id="titan-head" transform="translate(8 -156)"',output)
 
+    def test_canonical_hulk_art_reads_as_right_facing_three_quarter_profile(self):
+        weeks=model.group_weeks(model.parse_cells(fixture_svg())); frames,_=model.build_frames(weeks); output=titan.render_titan(frames,frames[-1].t)
+        for marker in ('TRUE_RIGHT_FACING_PROFILE_V6','id="titan-profile-nose-tip"','id="titan-cheek-forward"','id="titan-back-plane"','id="titan-sternum-forward"'):
+            self.assertIn(marker,output)
+        self.assertIn('id="titan-eye-far" opacity=".24"',output)
+        self.assertIn('id="titan-eye-near"',output)
+
+    def test_directional_chest_uses_depth_staging_instead_of_front_on_symmetry(self):
+        weeks=model.group_weeks(model.parse_cells(fixture_svg())); frames,_=model.build_frames(weeks); output=titan.render_titan(frames,frames[-1].t)
+        self.assertIn('id="titan-pec-far" transform="translate(-9 0) scale(.64 1)"',output)
+        self.assertIn('id="titan-pec-near" transform="translate(8 0) scale(1.08 1)"',output)
+        self.assertIn('id="far-shoulder" transform="translate(-48 -91) scale(.78)"',output)
+        self.assertIn('id="near-shoulder" transform="translate(76 -86) scale(1.06)"',output)
+
     def test_spring_physics_deforms_then_settles(self):
         a=render._spring_response(0,7,'feet'); b=render._spring_response(.18,7,'feet'); c=render._spring_response(1.8,7,'feet'); self.assertNotEqual(a,(0,1,1,0)); self.assertNotEqual(b,(0,1,1,0)); self.assertEqual(c,(0,1,1,0)); self.assertTrue(a[1]>1 or a[2]<1)
 
