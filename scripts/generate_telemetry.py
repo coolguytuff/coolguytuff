@@ -48,7 +48,7 @@ def collect():
     user = request_json(f"/users/{OWNER}")
     repos = request_json(f"/users/{OWNER}/repos?per_page=100&type=owner&sort=pushed")
     public = [repo for repo in repos if not repo.get("private")]
-    originals = [repo for repo in public if not repo.get("fork") and repo.get("name") != OWNER]
+    originals = [repo for repo in public if not repo.get("fork")]
     forks = [repo for repo in public if repo.get("fork")]
 
     language_bytes = collections.Counter()
