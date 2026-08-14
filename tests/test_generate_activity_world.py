@@ -45,6 +45,12 @@ class ActivityWorldTests(unittest.TestCase):
     def test_skeletal_pose_has_real_joint_range(self):
         weeks=activity.group_weeks(activity.parse_cells(fixture_svg())); frames,_=activity.build_frames(weeks); poses=[titan.pose_for(f) for f in frames if f.state=='sprint']; self.assertGreater(max(p.shoulder_near for p in poses)-min(p.shoulder_near for p in poses),30); self.assertGreater(max(p.hip_near for p in poses)-min(p.hip_near for p in poses),20)
 
+    def test_joint_animations_preserve_static_translations(self):
+        weeks=model.group_weeks(model.parse_cells(fixture_svg())); frames,_=model.build_frames(weeks); output=titan.render_titan(frames,frames[-1].t)
+        for joint in ('titan-head','near-shoulder','far-shoulder'):
+            start=output.index(f'id="{joint}"'); window=output[start:start+650]
+            self.assertIn('additive="sum"',window,f'{joint} animation must preserve its static translation')
+
     def test_hulk_visual_contract_has_readable_head_and_mass(self):
         weeks=model.group_weeks(model.parse_cells(fixture_svg())); frames,_=model.build_frames(weeks); output=titan.render_titan(frames,frames[-1].t)
         for marker in ('HULK_MASS_SILHOUETTE','id="titan-hair"','id="titan-face"','id="titan-brow"','id="titan-jaw"','id="titan-traps"','id="titan-chest"','id="titan-purple-shorts"'):
