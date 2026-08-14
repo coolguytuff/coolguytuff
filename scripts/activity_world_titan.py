@@ -38,23 +38,24 @@ def pose_for(frame: Frame) -> Pose:
     p = max(0.0, min(1.0, frame.phase))
 
     if frame.state == 'sprint':
-        # Contralateral arm/leg drive, double-support body rhythm, and a
-        # counter-rotated head keep the gaze stable while the torso leans.
+        # Canonical rig faces +X. Lean the mass into travel and tuck whichever
+        # leg is in forward swing; the trailing stance leg stays comparatively
+        # extended. Mirroring the rig for -X preserves the same biomechanics.
         s = math.sin(p * math.tau)
         c = math.cos(p * math.tau)
         double_step = .5 - .5 * math.cos(p * math.tau * 2)
         return Pose(
-            -8.0 + 1.2 * c,
+            8.0 + 1.2 * c,
             .4 + .45 * double_step,
-            8.0 - 1.0 * c,
+            -8.0 - 1.0 * c,
             -38 * s - 6,
             74 + 18 * max(0, s),
             38 * s + 8,
             76 + 18 * max(0, -s),
             34 * s + 3,
-            20 + 52 * max(0, s),
+            22 + 46 * max(0, -s),
             -34 * s - 3,
-            18 + 50 * max(0, -s),
+            22 + 46 * max(0, s),
             1.08 + .08 * max(0, -s),
             .65 * double_step,
         )

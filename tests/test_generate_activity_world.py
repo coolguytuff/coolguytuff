@@ -71,6 +71,20 @@ class ActivityWorldTests(unittest.TestCase):
         self.assertTrue(poses)
         self.assertLess(max(abs(p.torso+p.head) for p in poses),2.0)
 
+    def test_forward_sprint_pose_leans_into_travel(self):
+        frame=model.Frame(1.0,0,0,'sprint',1,phase=.25,contact='none')
+        pose=titan.pose_for(frame)
+        self.assertGreater(pose.torso,4.0)
+        self.assertLess(pose.head,-4.0)
+        self.assertLess(abs(pose.torso+pose.head),2.0)
+
+    def test_forward_sprint_tucks_swing_knee_not_trailing_knee(self):
+        frame=model.Frame(1.0,0,0,'sprint',1,phase=.25,contact='none')
+        pose=titan.pose_for(frame)
+        self.assertLess(pose.hip_near,-20.0)
+        self.assertGreater(pose.hip_far,20.0)
+        self.assertGreater(pose.knee_near,pose.knee_far+20.0)
+
     def test_jump_leads_with_foreground_fist_in_travel_direction(self):
         frame=model.Frame(1.0,0,0,'jump',1,phase=.55,contact='none')
         pose=titan.pose_for(frame)
