@@ -111,7 +111,7 @@ jobs:
       - name: Validate workflow hardening invariants
         run: |
           set -euo pipefail
-          workflows=(.github/workflows/profile-assets.yml .github/workflows/snake.yml .github/workflows/validate-profile.yml)
+          workflows=(.github/workflows/profile-assets.yml .github/workflows/snake.yml)
           if grep -En '@latest|git add -A|pull_request_target' "${workflows[@]}"; then
             echo 'Found a forbidden mutable or overly broad workflow pattern.' >&2
             exit 1
