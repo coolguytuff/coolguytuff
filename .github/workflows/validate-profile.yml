@@ -1,0 +1,125 @@
+name: Validate profile
+
+on:
+  pull_request:
+    paths:
+      - "README.md"
+      - "assets/**"
+      - "scripts/**"
+      - ".github/workflows/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "README.md"
+      - "assets/**"
+      - "scripts/**"
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out profile repository
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+
+      - name: Compile telemetry generator
+        run: python3 -m py_compile scripts/generate_telemetry.py
+
+      - name: Validate local assets and README references
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          import xml.etree.ElementTree as ET
+
+          root = Path('.')
+          readme = (root / 'README.md').read_text(encoding='utf-8')
+          required = [
+              root / 'assets/dave-command-core.svg',
+              root / 'assets/execution-loop.svg',
+              root / 'assets/tool-deck.svg',
+              root / 'assets/telemetry.svg',
+              root / 'profile-3d-contrib/profile-night-rainbow.svg',
+              root / 'profile-3d-contrib/profile-gitblock.svg',
+          ]
+          for path in required:
+              assert path.is_file(), f'missing required asset: {path}'
+
+          local_refs = set(re.findall(r'(?:src|srcset)="\./([^"\s]+)', readme))
+          assert local_refs, 'README contains no local asset references'
+          for relative in sorted(local_refs):
+              path = root / relative
+              assert path.is_file(), f'broken local README asset reference: {relative}'
+
+          banned = [
+              'github-readme-stats.vercel.app',
+              'github-readme-streak-stats',
+              'streak-stats.demolab.com',
+              'readme-typing-svg',
+              'capsule-render.vercel.app',
+              'skillicons.dev',
+              'komarev.com/ghpvc',
+          ]
+          for token in banned:
+              assert token not in readme, f'fragile external profile dependency returned: {token}'
+
+          assert '@gmail.com' not in readme.lower(), 'personal Gmail address must not appear in README'
+          assert 'dave-agent-os' not in readme, 'private Dave repository name must not be linked from README'
+
+          for path in (root / 'assets').glob('*.svg'):
+              text = path.read_text(encoding='utf-8')
+              ET.fromstring(text)
+              lower = text.lower()
+              assert '<script' not in lower, f'script element not allowed in {path}'
+              assert 'javascript:' not in lower, f'javascript URL not allowed in {path}'
+
+          dave = (root / 'assets/dave-command-core.svg').read_text(encoding='utf-8')
+          assert '<animate' in dave, 'Dave core lost its SVG animation'
+          assert 'dur="28s"' in dave, 'Dave core lost the slow horizontal turntable cycle'
+          print(f'validated {len(local_refs)} local README asset references and SVG safety')
+          PY
+
+      - name: Generate telemetry against GitHub API
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          TELEMETRY_OUT: /tmp/telemetry.svg
+        run: python3 scripts/generate_telemetry.py
+
+      - name: Validate generated telemetry
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          import xml.etree.ElementTree as ET
+
+          text = Path('/tmp/telemetry.svg').read_text(encoding='utf-8')
+          ET.fromstring(text)
+          percentages = [int(value) for value in re.findall(r'>(\d+)%</text>', text)]
+          if percentages:
+              assert sum(percentages) == 100, f'language percentages sum to {sum(percentages)}, expected 100'
+          assert '<script' not in text.lower()
+          print('generated telemetry is valid; language percentages:', percentages)
+          PY
+
+      - name: Validate workflow hardening invariants
+        run: |
+          set -euo pipefail
+          workflows=(.github/workflows/profile-assets.yml .github/workflows/snake.yml .github/workflows/validate-profile.yml)
+          if grep -En '@latest|git add -A|pull_request_target' "${workflows[@]}"; then
+            echo 'Found a forbidden mutable or overly broad workflow pattern.' >&2
+            exit 1
+          fi
+          grep -Fq 'contents: read' .github/workflows/profile-assets.yml
+          grep -Fq 'contents: read' .github/workflows/snake.yml
+          grep -Fq 'contents: write' .github/workflows/profile-assets.yml
+          grep -Fq 'contents: write' .github/workflows/snake.yml
+          grep -Fq 'git add -- profile-3d-contrib assets/telemetry.svg' .github/workflows/profile-assets.yml
+          grep -Fq 'git add -- github-contribution-grid-snake.svg github-contribution-grid-snake-dark.svg' .github/workflows/snake.yml
+          echo 'workflow hardening invariants validated'
