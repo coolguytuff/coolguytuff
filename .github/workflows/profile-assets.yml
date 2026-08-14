@@ -1,0 +1,80 @@
+name: Refresh profile assets
+
+on:
+  schedule:
+    - cron: "23 7 * * *"
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/profile-assets.yml"
+      - "scripts/generate_telemetry.py"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: profile-assets-main
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Check out profile repository
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+
+      - name: Generate 3D contribution topology
+        uses: yoshi389111/github-profile-3d-contrib@9e3f937195cf840d364388973f73e3c4b3753586
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+
+      - name: Generate self-hosted telemetry
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+        run: python3 scripts/generate_telemetry.py
+
+      - name: Package generated assets
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: generated-profile-assets
+          path: |
+            profile-3d-contrib
+            assets/telemetry.svg
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    needs: generate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Check out profile repository
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+
+      - name: Download generated assets
+        uses: actions/download-artifact@484a0b528fb4d7bd804637ccb632e47a0e638317
+        with:
+          name: generated-profile-assets
+          path: .
+
+      - name: Commit only generated profile assets
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- profile-3d-contrib assets/telemetry.svg
+          if git diff --cached --quiet; then
+            echo "Profile assets are already current."
+            exit 0
+          fi
+          git commit -m "chore: refresh generated profile assets"
+          git push

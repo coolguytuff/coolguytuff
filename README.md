@@ -1,106 +1,54 @@
-<!-- =========================================================
-     AARON SLUTSKY // coolguytuff
-     PERSONAL AI LAB // SYSTEMS • AGENTS • AUTOMATION
-     ========================================================= -->
+<!--
+  AARON SLUTSKY // coolguytuff
+  DAVE COMMAND PROFILE
+  Primary visuals are self-hosted in this repository.
+-->
 
 <div align="center">
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=230&color=0:020617,28:0f172a,58:1d4ed8,80:6d28d9,100:020617&text=AARON%20SLUTSKY&fontColor=ffffff&fontSize=48&fontAlignY=36&desc=%E2%9F%A6%20AUTONOMOUS%20SYSTEMS%20%2F%2F%20AI%20AGENTS%20%2F%2F%20EXPERIMENTAL%20SOFTWARE%20%E2%9F%A7&descAlignY=58&descSize=14&animation=fadeIn" alt="Aaron Slutsky" />
+# Aaron Slutsky
 
-<a href="https://github.com/coolguytuff">
-<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=700&size=22&duration=2100&pause=550&color=58A6FF&center=true&vCenter=true&repeat=true&width=900&height=62&lines=%5B+SYSTEM+ONLINE+%5D+Welcome+to+my+AI+lab.;Building+agents+that+carry+work+to+completion.;Reason+%E2%86%92+Plan+%E2%86%92+Act+%E2%86%92+Evaluate+%E2%86%92+Improve.;Human+intent.+Machine+execution.;I+build+things+I+wish+already+existed." alt="Animated intro" />
-</a>
+**AI systems · autonomous agents · automation · experimental software**
 
-<br/>
-
-<img src="https://img.shields.io/badge/STATUS-BUILDING-22c55e?style=for-the-badge&labelColor=020617" />
-<img src="https://img.shields.io/badge/FOCUS-AUTONOMOUS_AI-3b82f6?style=for-the-badge&labelColor=020617" />
-<img src="https://img.shields.io/badge/MODE-EXPERIMENTAL-8b5cf6?style=for-the-badge&labelColor=020617" />
-<img src="https://komarev.com/ghpvc/?username=coolguytuff&style=for-the-badge&color=0ea5e9&label=VISITORS" />
+`coolguytuff` &nbsp; // &nbsp; building software that can carry an objective forward, not just answer a prompt
 
 </div>
 
----
+<p align="center">
+  <img width="100%" src="./assets/dave-command-core.svg" alt="Dave Command Core — Aaron's animated pseudo-3D personal Agent OS visualization" />
+</p>
 
-## `00 // ENTER THE LAB`
-
-<div align="center">
-  <img width="100%" src="./assets/neural-core.svg" alt="Animated neural core" />
-</div>
-
-```text
-┌──────────────────────────────────────────────────────────────────────────────┐
-│  OPERATOR : AARON SLUTSKY                                                   │
-│  HANDLE   : coolguytuff                                                     │
-│  DOMAIN   : autonomous agents • orchestration • automation • AI systems     │
-│  MISSION  : make software capable of carrying real objectives forward       │
-│  LOOP     : build → break → measure → improve → ship                        │
-│  STATE    : ████████████████████████████████████  ONLINE                    │
-└──────────────────────────────────────────────────────────────────────────────┘
-```
-
-> **I’m interested in the point where AI stops being a chat box and starts becoming a system:** persistent context, tools, planning, execution, evaluation, recovery, coordination, and actual completion.
+<p align="center"><sub><b>DAVE // PRIVATE R&D</b> · the core rotates slowly in pseudo-3D using GitHub-safe SVG animation — no JavaScript, no separate site</sub></p>
 
 ---
 
-## `01 // THE 3D GRID`
+## `01 // SIGNAL`
 
-<div align="center">
-
-### My GitHub activity — rendered as a 3D city
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./profile-3d-contrib/profile-night-rainbow.svg" />
-  <source media="(prefers-color-scheme: light)" srcset="./profile-3d-contrib/profile-gitblock.svg" />
-  <img width="100%" alt="3D GitHub contribution calendar" src="./profile-3d-contrib/profile-night-rainbow.svg" />
-</picture>
-
-`every block = something built, tested, broken, fixed, or learned`
-
-</div>
-
----
-
-## `02 // WHAT I BUILD`
+I’m interested in the point where AI stops being a chat box and starts becoming a **system**: persistent context, tools, planning, execution, evidence, evaluation, recovery, coordination, and actual completion.
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
-### 🧠 Agent Systems
+### What I build
 
-Software that can keep context, choose tools, coordinate work, recover from failure, and move an objective forward across many steps.
-
-`memory` `planning` `tool use` `orchestration` `evaluation`
-
-</td>
-<td width="50%" valign="top">
-
-### ⚙️ Automation Engines
-
-Turning repetitive human workflows into systems that can execute reliably with minimal babysitting.
-
-`pipelines` `workflows` `media` `routing` `agents`
-
-</td>
-</tr>
-<tr>
-<td width="50%" valign="top">
-
-### 🧬 Experimental AI Software
-
-I like taking ambitious ideas seriously enough to prototype them — especially systems that combine multiple models, tools, and execution layers.
-
-`R&D` `prototypes` `AI-native software` `architecture`
+- autonomous and multi-step agent systems
+- automation pipelines that remove repetitive work
+- AI-native product experiments
+- tooling for orchestration, evaluation, and execution
+- reconstruction/research workflows for understanding complex software
 
 </td>
 <td width="50%" valign="top">
 
-### 🔬 Software Reconstruction
+### What I optimize for
 
-Studying how complex products behave, mapping their systems, and learning how to rebuild or improve the underlying experience.
-
-`research` `reverse engineering` `product systems` `UX`
+- **completion over cleverness**
+- evidence over vibes
+- strong authority boundaries
+- recoverable failure modes
+- local-first operation where it makes sense
+- systems that improve without becoming uncontrollable
 
 </td>
 </tr>
@@ -108,125 +56,156 @@ Studying how complex products behave, mapping their systems, and learning how to
 
 ---
 
-## `03 // ACTIVE EXPERIMENTS`
+## `02 // DAVE`
 
-<div align="center">
+> **Dave** is my private experimental **Personal Agent OS** — an attempt to make one coherent system out of identity, context, agents, teams, tools, execution, evaluation, governance, and recovery.
 
-<a href="https://github.com/coolguytuff/OmniRoute">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=coolguytuff&repo=OmniRoute&theme=transparent&hide_border=true&title_color=60a5fa&text_color=94a3b8&icon_color=a78bfa" />
-</a>
-<a href="https://github.com/coolguytuff/A-auto-RedditVideoMakerBot">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=coolguytuff&repo=A-auto-RedditVideoMakerBot&theme=transparent&hide_border=true&title_color=60a5fa&text_color=94a3b8&icon_color=a78bfa" />
-</a>
+<table>
+<tr>
+<td width="33%" valign="top"><b>IDENTITY</b><br/><sub>Persistent context and a stable system identity across work.</sub></td>
+<td width="33%" valign="top"><b>EXECUTION</b><br/><sub>Agents and teams that can carry long-running objectives through tools and workflows.</sub></td>
+<td width="33%" valign="top"><b>GOVERNANCE</b><br/><sub>Authority, routing, safety, evidence, and recovery are system properties — not afterthoughts.</sub></td>
+</tr>
+<tr>
+<td width="33%" valign="top"><b>EVALUATION</b><br/><sub>Outcomes are observed and judged instead of assumed successful.</sub></td>
+<td width="33%" valign="top"><b>LOCAL-FIRST</b><br/><sub>Use local capability where it is appropriate, with explicit routing and graceful fallback.</sub></td>
+<td width="33%" valign="top"><b>EVOLUTION</b><br/><sub>Capabilities can improve through governed experimentation rather than uncontrolled self-modification.</sub></td>
+</tr>
+</table>
 
-<a href="https://github.com/coolguytuff/autovid-system">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=coolguytuff&repo=autovid-system&theme=transparent&hide_border=true&title_color=60a5fa&text_color=94a3b8&icon_color=a78bfa" />
-</a>
-<a href="https://github.com/coolguytuff/ECC">
-  <img src="https://github-readme-stats.vercel.app/api/pin/?username=coolguytuff&repo=ECC&theme=transparent&hide_border=true&title_color=60a5fa&text_color=94a3b8&icon_color=a78bfa" />
-</a>
-
-</div>
-
-### `CLASSIFIED / PRIVATE R&D`
-
-```text
-PROJECT DAVE  ███████████████████████░  PERSONAL AGENT OS
-
-persistent identity  ─────┐
-agent/team runtime   ─────┼──► governed autonomous execution
-objective evaluation ─────┤
-capability evolution ─────┤
-local-first systems  ─────┘
-```
-
-Some of my biggest experiments are private while I build them. The public repos are only part of the lab.
+<sub>The repository is private while I build it. This profile describes the direction at a high level, not private implementation details.</sub>
 
 ---
 
-## `04 // SYSTEM ARCHITECTURE`
+## `03 // EXECUTION LOOP`
 
-```mermaid
-flowchart LR
-    A[Human Intent] --> B[Reasoning]
-    B --> C[Plan]
-    C --> D[Tools + Agents]
-    D --> E[Execution]
-    E --> F[Evidence]
-    F --> G[Evaluation]
-    G -->|good| H[Ship]
-    G -->|not good enough| I[Learn / Repair]
-    I --> B
-
-    style A fill:#0f172a,stroke:#60a5fa,color:#fff
-    style B fill:#111827,stroke:#818cf8,color:#fff
-    style C fill:#111827,stroke:#818cf8,color:#fff
-    style D fill:#111827,stroke:#a78bfa,color:#fff
-    style E fill:#111827,stroke:#c084fc,color:#fff
-    style F fill:#111827,stroke:#38bdf8,color:#fff
-    style G fill:#111827,stroke:#22d3ee,color:#fff
-    style H fill:#052e16,stroke:#22c55e,color:#fff
-    style I fill:#450a0a,stroke:#f87171,color:#fff
-```
+<p align="center">
+  <img width="100%" src="./assets/execution-loop.svg" alt="Closed-loop execution: intent, reason, plan, act, evidence, evaluate, ship or repair" />
+</p>
 
 ---
 
-## `05 // TOOL DECK`
+## `04 // ACTIVITY TOPOLOGY`
 
 <div align="center">
 
-<img src="https://skillicons.dev/icons?i=python,ts,js,nodejs,react,nextjs,html,css,git,github,docker,supabase,postgres,bash,vscode&perline=15" alt="Technology stack" />
+**GitHub activity rendered as a 3D contribution landscape.** Every column is part of the history — built, tested, changed, broken, fixed, or learned.
 
-<br/><br/>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./profile-3d-contrib/profile-night-rainbow.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="./profile-3d-contrib/profile-gitblock.svg" />
+  <img width="100%" src="./profile-3d-contrib/profile-night-rainbow.svg" alt="3D GitHub contribution topology" />
+</picture>
 
-`LLMs` • `Agents` • `GitHub Actions` • `Automation` • `APIs` • `Local Models` • `Prompt Systems` • `Evaluation` • `Orchestration`
+<sub>`3D RENDER // generated in-repo by GitHub Actions // theme-aware`</sub>
 
 </div>
 
 ---
 
-## `06 // LIVE TELEMETRY`
+## `05 // BUILD DOMAINS`
 
-<div align="center">
+<table>
+<tr>
+<td width="50%" valign="top">
 
-<img height="180" src="https://github-readme-stats.vercel.app/api?username=coolguytuff&show_icons=true&theme=transparent&hide_border=true&rank_icon=percentile&title_color=60a5fa&text_color=94a3b8&icon_color=a78bfa" alt="GitHub stats" />
-<img height="180" src="https://github-readme-stats.vercel.app/api/top-langs/?username=coolguytuff&layout=compact&theme=transparent&hide_border=true&title_color=60a5fa&text_color=94a3b8" alt="Top languages" />
+### `AGENT SYSTEMS`
+Systems that maintain context, choose tools, coordinate work, recover from failure, and keep objectives moving across many steps.
 
-<br/>
+`memory` · `planning` · `tool use` · `teams` · `evaluation`
 
-<img src="https://github-readme-streak-stats.herokuapp.com?user=coolguytuff&theme=transparent&hide_border=true&stroke=1e293b&ring=60a5fa&fire=a78bfa&currStreakLabel=60a5fa&sideLabels=94a3b8&dates=64748b" alt="GitHub streak" />
+</td>
+<td width="50%" valign="top">
 
-</div>
+### `AUTOMATION ENGINES`
+Turn repetitive or multi-stage workflows into dependable software that requires less babysitting.
+
+`pipelines` · `workflows` · `media` · `APIs` · `scheduling`
+
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+
+### `EXPERIMENTAL AI SOFTWARE`
+Prototype ambitious ideas early enough to find out what actually works — especially when models, tools, data, and runtime behavior interact.
+
+`R&D` · `AI-native products` · `architecture` · `prototyping`
+
+</td>
+<td width="50%" valign="top">
+
+### `SOFTWARE RECONSTRUCTION`
+Research complex products, map behavior and architecture, then use that understanding to rebuild or improve the experience.
+
+`research` · `systems analysis` · `product behavior` · `UX`
+
+</td>
+</tr>
+</table>
 
 ---
 
-## `07 // CONTRIBUTION CREATURE`
+## `06 // PUBLIC LAB`
+
+Public GitHub is only one slice of what I’m working on. I keep forked research repos visibly labeled instead of presenting upstream work as mine.
+
+**Original public build**
+
+- **[autovid-system](https://github.com/coolguytuff/autovid-system)** — AI-powered automated short-form video generation engine for TikTok, Shorts, and Reels.
+
+**Forked exploration / reference labs**
+
+- **[OmniRoute](https://github.com/coolguytuff/OmniRoute)** `fork` — exploring AI gateway, routing, fallback, and multi-provider infrastructure.
+- **[ruflo](https://github.com/coolguytuff/ruflo)** `fork` — exploring multi-agent harnesses, swarm coordination, memory, and agent tooling.
+- **[ECC](https://github.com/coolguytuff/ECC)** `fork` — exploring agent-harness performance, skills, memory, security, and research-first workflows.
+- **[A-auto-RedditVideoMakerBot](https://github.com/coolguytuff/A-auto-RedditVideoMakerBot)** `fork` — automation reference for multi-platform short-form media workflows.
+
+---
+
+## `07 // TOOL DECK`
+
+<p align="center">
+  <img width="100%" src="./assets/tool-deck.svg" alt="Capability tool deck covering languages, runtimes, data, automation, and agent infrastructure" />
+</p>
+
+---
+
+## `08 // TELEMETRY`
+
+<p align="center">
+  <img width="100%" src="./assets/telemetry.svg" alt="Self-hosted GitHub telemetry including public repositories, repository mix, latest public activity, and language distribution" />
+</p>
+
+<sub>Unlike the old stat-card setup, this panel is generated into the repo itself. If the GitHub API is temporarily unavailable, it renders an intentional degraded state instead of broken linked image text.</sub>
+
+---
+
+## `09 // CONTRIBUTION CREATURE`
 
 <div align="center">
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/coolguytuff/coolguytuff/output/github-contribution-grid-snake-dark.svg" />
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/coolguytuff/coolguytuff/output/github-contribution-grid-snake.svg" />
-  <img width="100%" alt="Contribution snake animation" src="https://raw.githubusercontent.com/coolguytuff/coolguytuff/output/github-contribution-grid-snake-dark.svg" />
+  <img width="100%" alt="Animated contribution snake" src="https://raw.githubusercontent.com/coolguytuff/coolguytuff/output/github-contribution-grid-snake-dark.svg" />
 </picture>
+
+<sub>`the only creature in the lab allowed to eat the commit graph`</sub>
 
 </div>
 
 ---
 
-## `08 // OPERATING PRINCIPLES`
+## `10 // OPERATING PRINCIPLES`
 
 ```text
-01  build the real thing, not the demo of the thing
-02  measure outputs instead of trusting vibes
-03  automate repeated work
-04  keep humans in control of what matters
-05  make failures observable and recoverable
-06  use the right model/tool for the job
-07  preserve context
-08  keep improving the system itself
-09  curiosity > convention
-10  ship
+01  build the real thing, not a demo of the thing
+02  observe outcomes instead of assuming success
+03  automate repeated work, preserve human authority
+04  make failures visible, bounded, and recoverable
+05  use the right model and tool for the job
+06  preserve context; improve the system; keep shipping
 ```
 
 ---
@@ -235,16 +214,8 @@ flowchart LR
 
 ### `TRANSMISSION // END`
 
-<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=15&duration=3200&pause=900&color=64748B&center=true&vCenter=true&width=760&lines=The+best+way+to+predict+better+software+is+to+build+it.;Currently+somewhere+between+prototype+and+obsession.;More+experiments+loading..." alt="Footer typing animation" />
+**I build things I wish already existed.**
 
-<br/>
-
-<a href="https://github.com/coolguytuff">
-<img src="https://img.shields.io/badge/EXPLORE_MY_GITHUB-%E2%86%92-2563eb?style=for-the-badge&logo=github&logoColor=white&labelColor=020617" />
-</a>
-
-<br/><br/>
-
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&height=120&section=footer&color=0:020617,35:1d4ed8,70:6d28d9,100:020617" />
+<sub>systems over prompts · outcomes over demos · curiosity over convention</sub>
 
 </div>

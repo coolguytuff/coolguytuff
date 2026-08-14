@@ -11,25 +11,66 @@ on:
       - ".github/workflows/snake.yml"
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: contribution-snake
+  cancel-in-progress: true
 
 jobs:
   generate:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: read
     steps:
-      - name: Generate snake SVGs
-        uses: Platane/snk/svg-only@v3
+      - name: Check out profile repository
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+
+      - name: Generate contribution snake SVGs
+        uses: Platane/snk/svg-only@a041d6c27ba561a39f5be9c26a784812765e434b
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
             dist/github-contribution-grid-snake.svg
-            dist/github-contribution-grid-snake-dark.svg?palette=github-dark&color_snake=#58A6FF
+            dist/github-contribution-grid-snake-dark.svg?palette=github-dark&color_snake=#7ff0ff
 
-      - name: Publish generated SVGs to output branch
-        uses: crazy-max/ghaction-github-pages@v3.1.0
+      - name: Package generated snake
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          target_branch: output
-          build_dir: dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: generated-contribution-snake
+          path: dist/*.svg
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    needs: generate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Check out profile repository
+        uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+
+      - name: Download generated snake
+        uses: actions/download-artifact@484a0b528fb4d7bd804637ccb632e47a0e638317
+        with:
+          name: generated-contribution-snake
+          path: /tmp/profile-snake
+
+      - name: Publish only generated SVGs to output branch
+        run: |
+          set -euo pipefail
+          test -f /tmp/profile-snake/github-contribution-grid-snake.svg
+          test -f /tmp/profile-snake/github-contribution-grid-snake-dark.svg
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan snake-output
+          git rm -rf . >/dev/null 2>&1 || true
+          git clean -fdx
+          cp /tmp/profile-snake/*.svg .
+          git add -- github-contribution-grid-snake.svg github-contribution-grid-snake-dark.svg
+          git commit -m "chore: refresh contribution snake"
+          git push --force origin HEAD:output
