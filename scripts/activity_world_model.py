@@ -14,7 +14,7 @@ RIGHT = 720.0
 TRACK_STEP = 58.0
 LEVEL_HEIGHT = {0: 42, 1: 68, 2: 98, 3: 132, 4: 174}
 # Frame.y is the nominal TITAN rig root. Adding RUNNER_FOOTLINE gives the
-# intended terrain contact plane; the renderer applies small pose-specific
+# intended terrain contact plane; the renderer applies pose-specific
 # compensation so bent/extended legs never penetrate the tower top.
 RUNNER_FOOTLINE = 104.0
 
@@ -186,25 +186,38 @@ def _append(frames, dt, x, y, state, direction, sx=1.0, sy=1.0, phase=0.0, conta
 def _sample_transition(frames, source, target, state, direction, cycle_index):
     x0, y0 = source
     x1, y1 = target
+
     if state == 'sprint':
-        duration = .36
-        samples = 10
+        # One complete gait cycle per contribution column. Horizontal velocity
+        # stays nearly constant instead of easing to a stop at every block.
+        duration = .40
+        samples = 14
         for i in range(1, samples + 1):
             p = i / samples
-            e = _ease(p)
             phase = (cycle_index + p) % 1.0
-            x = x0 + (x1 - x0) * e
-            # The contact plane rises slightly during the flight/recovery portion
-            # instead of pushing the runner down into the terrain.
-            y = y0 + (y1 - y0) * e - 5.0 * abs(math.sin(phase * math.tau))
-            contact = 'left' if phase < .16 or phase > .91 else 'right' if .44 < phase < .66 else 'none'
-            stretch = math.sin(phase * math.tau)
-            _append(frames, duration / samples, x, y, state, direction, 1 + .035 * stretch, 1 - .028 * stretch, phase, contact)
-        return 2.6, 'foot'
+            x = x0 + (x1 - x0) * p
+            baseline = y0 + (y1 - y0) * p
+            flight = .5 - .5 * math.cos(phase * math.tau * 2)
+            y = baseline - 3.2 * flight
+            contact = 'left' if phase < .10 or phase > .90 else 'right' if .40 < phase < .60 else 'none'
+            stride = abs(math.sin(phase * math.tau))
+            _append(
+                frames,
+                duration / samples,
+                x,
+                y,
+                state,
+                direction,
+                1 + .012 * stride,
+                1 - .010 * stride,
+                phase,
+                contact,
+            )
+        return 2.8, 'foot', frames[-1].t
 
     if state == 'climb':
-        duration = 1.08
-        samples = 18
+        duration = 1.12
+        samples = 22
         ledge_x = x1 - direction * 12
         for i in range(1, samples + 1):
             p = i / samples
@@ -216,7 +229,6 @@ def _sample_transition(frames, source, target, state, direction, cycle_index):
             elif p < .50:
                 q = (p - .22) / .28
                 x = ledge_x
-                # Feet stay on the lower tower while both hands grab the lip.
                 y = y0 + 1.8 * math.sin(q * math.pi)
                 contact = 'hands'
             elif p < .82:
@@ -231,28 +243,52 @@ def _sample_transition(frames, source, target, state, direction, cycle_index):
                 contact = 'both'
             compression = math.sin(min(1, p / .22) * math.pi)
             _append(frames, duration / samples, x, y, state, direction, 1 + .025 * compression, 1 - .035 * compression, p, contact)
-        return 5.2, 'hands'
+        return 5.2, 'hands', frames[-1].t
 
-    duration = .86
-    samples = 18
-    apex_lift = 72 + min(40, abs(y1 - y0) * .38)
+    # Jump is split into a planted loading phase, ballistic flight, and a
+    # planted landing/settle phase. This avoids the old sinusoidal hover arc
+    # and keeps impact timing synchronized with the terrain response.
+    duration = .98
+    samples = 28
+    takeoff = .18
+    touchdown = .82
+    apex_lift = 78 + min(42, abs(y1 - y0) * .42)
+    impact_time = None
+    lead_x = x0 + (x1 - x0) * .035
+
     for i in range(1, samples + 1):
         p = i / samples
-        e = _ease(p)
-        x = x0 + (x1 - x0) * e
-        baseline = y0 + (y1 - y0) * e
-        y = baseline - math.sin(p * math.pi) * apex_lift
-        if p < .14:
-            sx, sy, contact = 1.16, .80, 'both'
-        elif p < .78:
-            sx, sy, contact = .95, 1.10, 'none'
-        elif p < .93:
-            sx, sy, contact = 1.20, .78, 'both'
+        if p < takeoff:
+            q = p / takeoff
+            x = x0 + (lead_x - x0) * _ease(q)
+            y = y0
+            sx = 1 + .065 * q
+            sy = 1 - .085 * q
+            contact = 'both'
+        elif p < touchdown:
+            q = (p - takeoff) / (touchdown - takeoff)
+            x = lead_x + (x1 - lead_x) * q
+            baseline = y0 + (y1 - y0) * q
+            y = baseline - 4.0 * apex_lift * q * (1.0 - q)
+            flight_shape = math.sin(math.pi * q)
+            sx = 1 - .024 * flight_shape
+            sy = 1 + .040 * flight_shape
+            contact = 'none'
         else:
-            sx, sy, contact = 1.08, .93, 'both'
+            q = (p - touchdown) / (1.0 - touchdown)
+            x = x1
+            y = y1
+            brace = math.exp(-5.5 * q)
+            sx = 1 + .12 * brace
+            sy = 1 - .15 * brace
+            contact = 'both'
+
         _append(frames, duration / samples, x, y, state, direction, sx, sy, p, contact)
-    _append(frames, .08, x1, y1, 'idle', direction, phase=0, contact='both')
-    return 8.4, 'feet'
+        if impact_time is None and p >= touchdown:
+            impact_time = frames[-1].t
+
+    _append(frames, .10, x1, y1, 'idle', direction, phase=0, contact='both')
+    return 8.4, 'feet', impact_time if impact_time is not None else frames[-1].t
 
 
 def build_frames(weeks: list[Week]):
@@ -267,18 +303,18 @@ def build_frames(weeks: list[Week]):
 
     def transition(source, target, state, direction):
         nonlocal cycle
-        amp, kind = _sample_transition(frames, pos[source], pos[target], state, direction, cycle)
+        amp, kind, impact_t = _sample_transition(frames, pos[source], pos[target], state, direction, cycle)
         cycle += 1
-        arrivals[target].append((frames[-1].t, amp, kind))
+        arrivals[target].append((impact_t, amp, kind))
 
     heights = [w.height for w in weeks]
     for i, state in enumerate(classify_steps(heights)):
         transition(i, i + 1, state, 1)
 
     ex, ey = pos[-1]
-    for i in range(1, 9):
-        q = i / 8
-        _append(frames, .06, ex + 12 * math.sin(q * math.pi), ey - 3 * math.sin(q * math.pi), 'turn', 1 if q < .5 else -1, 1 + .12 * math.sin(q * math.pi), 1 - .10 * math.sin(q * math.pi), q, 'both')
+    for i in range(1, 13):
+        q = i / 12
+        _append(frames, .04, ex + 12 * math.sin(q * math.pi), ey - 3 * math.sin(q * math.pi), 'turn', 1 if q < .5 else -1, 1 + .12 * math.sin(q * math.pi), 1 - .10 * math.sin(q * math.pi), q, 'both')
     _append(frames, .16, ex, ey, 'idle', -1, phase=0, contact='both')
 
     for ri, state in enumerate(classify_steps(list(reversed(heights)))):
@@ -286,8 +322,8 @@ def build_frames(weeks: list[Week]):
         transition(source, source - 1, state, -1)
 
     sx0, sy0 = pos[0]
-    for i in range(1, 9):
-        q = i / 8
-        _append(frames, .06, sx0 - 12 * math.sin(q * math.pi), sy0 - 3 * math.sin(q * math.pi), 'turn', -1 if q < .5 else 1, 1 + .12 * math.sin(q * math.pi), 1 - .10 * math.sin(q * math.pi), q, 'both')
+    for i in range(1, 13):
+        q = i / 12
+        _append(frames, .04, sx0 - 12 * math.sin(q * math.pi), sy0 - 3 * math.sin(q * math.pi), 'turn', -1 if q < .5 else 1, 1 + .12 * math.sin(q * math.pi), 1 - .10 * math.sin(q * math.pi), q, 'both')
     _append(frames, .28, sx0, sy0, 'idle', 1, phase=0, contact='both')
     return frames, arrivals
