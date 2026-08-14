@@ -10,6 +10,7 @@ on:
     paths:
       - ".github/workflows/profile-assets.yml"
       - "scripts/generate_telemetry.py"
+      - "scripts/generate_activity_world.py"
 
 permissions:
   contents: read
@@ -34,6 +35,19 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: ${{ github.repository_owner }}
 
+      - name: Generate contribution source for Activity World
+        uses: Platane/snk/svg-only@a041d6c27ba561a39f5be9c26a784812765e434b
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            dist/activity-source.svg?palette=github-dark&color_snake=#7ff0ff
+
+      - name: Generate BRICK Activity World
+        env:
+          CONTRIBUTION_SVG: dist/activity-source.svg
+          ACTIVITY_WORLD_OUT: assets/activity-world.svg
+        run: python3 scripts/generate_activity_world.py
+
       - name: Generate self-hosted telemetry
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -47,6 +61,7 @@ jobs:
           path: |
             profile-3d-contrib
             assets/telemetry.svg
+            assets/activity-world.svg
           if-no-files-found: error
           retention-days: 1
 
@@ -71,7 +86,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -- profile-3d-contrib assets/telemetry.svg
+          git add -- profile-3d-contrib assets/telemetry.svg assets/activity-world.svg
           if git diff --cached --quiet; then
             echo "Profile assets are already current."
             exit 0
