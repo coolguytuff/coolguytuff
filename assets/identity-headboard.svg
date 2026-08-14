@@ -1,106 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-label="Aaron Slutsky animated identity command headboard">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" role="img" aria-label="Aaron Slutsky animated identity header with seamless GitHub theme-aware fade">
 <defs>
-  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0" stop-color="#02050d"/>
-    <stop offset=".5" stop-color="#07111f"/>
-    <stop offset="1" stop-color="#03040b"/>
-  </linearGradient>
-  <linearGradient id="nameFill" x1="0" y1="0" x2="1" y2="0">
-    <stop offset="0" stop-color="#dffcff"/>
-    <stop offset=".22" stop-color="#7ff0ff"/>
-    <stop offset=".52" stop-color="#ffffff"/>
-    <stop offset=".74" stop-color="#89a8ff"/>
-    <stop offset="1" stop-color="#c084fc"/>
-    <animate attributeName="x1" values="-0.35;0.15;-0.35" dur="12s" repeatCount="indefinite"/>
-    <animate attributeName="x2" values=".65;1.15;.65" dur="12s" repeatCount="indefinite"/>
-  </linearGradient>
-  <linearGradient id="edge" x1="0" y1="0" x2="1" y2="0">
-    <stop offset="0" stop-color="#7ff0ff" stop-opacity="0"/>
-    <stop offset=".5" stop-color="#7ff0ff" stop-opacity=".8"/>
-    <stop offset="1" stop-color="#c084fc" stop-opacity="0"/>
-  </linearGradient>
-  <radialGradient id="halo">
-    <stop offset="0" stop-color="#7ff0ff" stop-opacity=".24"/>
-    <stop offset=".42" stop-color="#4a7bff" stop-opacity=".10"/>
-    <stop offset="1" stop-color="#020617" stop-opacity="0"/>
-  </radialGradient>
-  <pattern id="grid" width="42" height="42" patternUnits="userSpaceOnUse">
-    <path d="M42 0H0V42" fill="none" stroke="#6d8cff" stroke-opacity=".055"/>
-  </pattern>
-  <filter id="glow" x="-30%" y="-50%" width="160%" height="200%">
-    <feGaussianBlur stdDeviation="3.5" result="b"/>
-    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
-  <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="12"/></filter>
-  <clipPath id="nameWindow"><rect x="88" y="76" width="1024" height="164" rx="18"/></clipPath>
+  <style>
+    .nameMain{fill:#eaffff}.nameCyan{fill:#80f4ff}.nameViolet{fill:#b78cff}.nameDepth{fill:#101a3b}
+    .userText{fill:#8bf3ff}.metaText{fill:#6c8298}.gridStroke{stroke:#6d8cff}.edgeStroke{stroke:#7ff0ff}.online{fill:#6ee7b7}
+    .cameoStroke{stroke:#eaffff}.nameOutline{stroke:#eaffff}.nameCyanStroke{stroke:#80f4ff}
+    .haze0{stop-color:#06101d}.haze1{stop-color:#06101d}.halo0{stop-color:#80f4ff}.halo1{stop-color:#b78cff}
+    .nf0{stop-color:#eaffff}.nf1{stop-color:#80f4ff}.nf2{stop-color:#eaffff}.nf3{stop-color:#b78cff}.nf4{stop-color:#eaffff}
+    .scan0{stop-color:#80f4ff}.scan1{stop-color:#fff}.scan2{stop-color:#b78cff}
+    @media (prefers-color-scheme: light){
+      .nameMain{fill:#10253d}.nameCyan{fill:#087a94}.nameViolet{fill:#5a43a6}.nameDepth{fill:#b7d8e4}
+      .userText{fill:#0b6781}.metaText{fill:#51667b}.gridStroke{stroke:#5472aa}.edgeStroke{stroke:#1d7793}.online{fill:#177a50}
+      .cameoStroke{stroke:#1b4256}.nameOutline{stroke:#10253d}.nameCyanStroke{stroke:#087a94}
+      .haze0,.haze1{stop-color:#dfeff4}.halo0{stop-color:#3a9db2}.halo1{stop-color:#755db2}
+      .nf0,.nf2,.nf4{stop-color:#10253d}.nf1{stop-color:#087a94}.nf3{stop-color:#5a43a6}
+      .scan0{stop-color:#087a94}.scan1{stop-color:#fff}.scan2{stop-color:#5a43a6}
+    }
+  </style>
+  <linearGradient id="nameFill" x1="0" y1="0" x2="1" y2="0"><stop class="nf0" offset="0"/><stop class="nf1" offset=".22"/><stop class="nf2" offset=".50"/><stop class="nf3" offset=".74"/><stop class="nf4" offset="1"/><animate attributeName="x1" values="-.35;.18;-.35" dur="12s" repeatCount="indefinite"/><animate attributeName="x2" values=".65;1.18;.65" dur="12s" repeatCount="indefinite"/></linearGradient>
+  <radialGradient id="atmosphere" cx="50%" cy="44%" r="64%"><stop class="haze0" offset="0" stop-opacity=".96"/><stop class="haze1" offset=".45" stop-opacity=".56"/><stop class="haze1" offset=".72" stop-opacity=".18"/><stop class="haze1" offset="1" stop-opacity="0"/></radialGradient>
+  <radialGradient id="halo" cx="50%" cy="47%" r="52%"><stop class="halo0" offset="0" stop-opacity=".16"/><stop class="halo1" offset=".44" stop-opacity=".08"/><stop class="halo0" offset="1" stop-opacity="0"/></radialGradient>
+  <linearGradient id="scan" x1="0" y1="0" x2="1" y2="0"><stop class="scan0" offset="0" stop-opacity="0"/><stop class="scan0" offset=".43" stop-opacity=".12"/><stop class="scan1" offset=".50" stop-opacity=".78"/><stop class="scan2" offset=".57" stop-opacity=".15"/><stop class="scan2" offset="1" stop-opacity="0"/></linearGradient>
+  <linearGradient id="fadeX" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#fff" stop-opacity=".34"/><stop offset=".18" stop-color="#fff"/><stop offset=".82" stop-color="#fff"/><stop offset=".92" stop-color="#fff" stop-opacity=".34"/><stop offset="1" stop-color="#000"/></linearGradient>
+  <linearGradient id="fadeY" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000"/><stop offset=".10" stop-color="#fff" stop-opacity=".34"/><stop offset=".21" stop-color="#fff"/><stop offset=".80" stop-color="#fff"/><stop offset=".92" stop-color="#fff" stop-opacity=".32"/><stop offset="1" stop-color="#000"/></linearGradient>
+  <mask id="edgeFade"><rect width="1200" height="340" fill="url(#fadeX)"/></mask><mask id="edgeFadeY"><rect width="1200" height="340" fill="url(#fadeY)"/></mask>
+  <filter id="glow" x="-35%" y="-55%" width="170%" height="210%"><feGaussianBlur stdDeviation="3.3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="18"/></filter>
+  <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" fill="none" class="gridStroke" stroke-opacity=".055"/></pattern><clipPath id="nameWindow"><rect x="74" y="66" width="1052" height="176" rx="20"/></clipPath>
 </defs>
-
-<rect width="1200" height="360" rx="30" fill="url(#bg)"/>
-<rect width="1200" height="360" rx="30" fill="url(#grid)"/>
-<ellipse cx="600" cy="164" rx="500" ry="190" fill="url(#halo)" filter="url(#soft)"/>
-<rect x="1" y="1" width="1198" height="358" rx="29" fill="none" stroke="#7ff0ff" stroke-opacity=".18"/>
-
-<g opacity=".5" stroke="#7ff0ff" stroke-width="1">
-  <path d="M55 55H205M995 55H1145M55 304H205M995 304H1145" stroke-opacity=".32"/>
-  <path d="M55 55V82M1145 55V82M55 277V304M1145 277V304" stroke-opacity=".2"/>
-</g>
-
-<g font-family="IBM Plex Mono,JetBrains Mono,ui-monospace,monospace">
-  <text x="58" y="42" fill="#60758b" font-size="9.8" letter-spacing="2.3">IDENTITY // OPERATOR CHANNEL</text>
-  <text x="1142" y="42" text-anchor="end" fill="#6ee7b7" font-size="9.8" letter-spacing="2">● ONLINE</text>
-</g>
-
-<!-- rare cameo: a tiny sponge adventurer peeks between letters -->
-<g id="sponge-cameo" clip-path="url(#nameWindow)" transform="translate(330 92)" opacity="0">
-  <animate attributeName="opacity" values="0;0;0;1;1;0;0" keyTimes="0;.19;.22;.24;.29;.32;1" dur="24s" repeatCount="indefinite"/>
-  <animateTransform attributeName="transform" type="translate"
-    values="330 118;330 118;330 90;330 90;330 118;330 118"
-    keyTimes="0;.22;.245;.29;.32;1" dur="24s" repeatCount="indefinite"/>
-  <rect x="-18" y="-14" width="36" height="46" rx="6" fill="#f5d94f" stroke="#fff4a7" stroke-width="1"/>
-  <circle cx="-7" cy="0" r="5" fill="#fff"/><circle cx="7" cy="0" r="5" fill="#fff"/>
-  <circle cx="-6" cy="0" r="2" fill="#1b75bc"/><circle cx="6" cy="0" r="2" fill="#1b75bc"/>
-  <path d="M-8 12Q0 18 8 12" fill="none" stroke="#6d4b24" stroke-width="1.7" stroke-linecap="round"/>
-  <circle cx="-11" cy="20" r="2" fill="#c89a34" opacity=".6"/><circle cx="10" cy="24" r="2.3" fill="#c89a34" opacity=".55"/>
-  <path d="M-7 32H7L0 39Z" fill="#d94848"/>
-</g>
-
-<!-- rare cameo: teal secret-agent platypus silhouette -->
-<g id="platypus-cameo" clip-path="url(#nameWindow)" transform="translate(855 118)" opacity="0">
-  <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.51;.535;.59;.615;1" dur="28s" repeatCount="indefinite"/>
-  <animateTransform attributeName="transform" type="translate"
-    values="855 128;855 128;855 92;855 92;855 128;855 128"
-    keyTimes="0;.51;.54;.59;.62;1" dur="28s" repeatCount="indefinite"/>
-  <ellipse cx="0" cy="13" rx="21" ry="24" fill="#2ab8ad" stroke="#84fff3" stroke-opacity=".5"/>
-  <ellipse cx="0" cy="18" rx="27" ry="7" fill="#e79836"/>
-  <circle cx="-7" cy="6" r="3.3" fill="#fff"/><circle cx="7" cy="6" r="3.3" fill="#fff"/>
-  <circle cx="-7" cy="6" r="1.2" fill="#172033"/><circle cx="7" cy="6" r="1.2" fill="#172033"/>
-  <path d="M-27 -3H27L17 -13H-14Z" fill="#6d4a2a"/>
-  <rect x="-18" y="-9" width="36" height="5" rx="2" fill="#5a371f"/>
-</g>
-
-<g text-anchor="middle" font-family="Inter,Segoe UI,Arial,sans-serif">
-  <text x="600" y="202" font-size="94" font-weight="900" letter-spacing="8"
-    fill="#0a1530" stroke="#41276f" stroke-width="5" opacity=".9" transform="translate(0 8)">AARON SLUTSKY</text>
-  <text x="600" y="202" font-size="94" font-weight="900" letter-spacing="8"
-    fill="none" stroke="#7ff0ff" stroke-width="5.5" stroke-opacity=".17">AARON SLUTSKY</text>
-  <text x="600" y="202" font-size="94" font-weight="900" letter-spacing="8"
-    fill="url(#nameFill)" stroke="#d8fbff" stroke-width=".7" filter="url(#glow)">AARON SLUTSKY</text>
-
-  <rect x="-250" y="105" width="170" height="112" rx="50" fill="url(#edge)" opacity=".25" transform="skewX(-18)">
-    <animate attributeName="x" values="-250;1320" dur="10.5s" repeatCount="indefinite"/>
-  </rect>
-
-  <text x="600" y="252" font-family="IBM Plex Mono,JetBrains Mono,ui-monospace,monospace"
-    fill="#8feeff" font-size="20" font-weight="700" letter-spacing="5">@coolguytuff</text>
-  <text x="600" y="285" font-family="IBM Plex Mono,JetBrains Mono,ui-monospace,monospace"
-    fill="#708298" font-size="10.5" letter-spacing="2.3">AI SYSTEMS // AUTONOMOUS AGENTS // AUTOMATION // EXPERIMENTAL SOFTWARE</text>
-</g>
-
-<g font-family="IBM Plex Mono,JetBrains Mono,ui-monospace,monospace">
-  <rect x="408" y="316" width="384" height="18" rx="9" fill="#07111f" stroke="#244967" stroke-opacity=".5"/>
-  <circle cx="428" cy="325" r="3" fill="#6ee7b7">
-    <animate attributeName="opacity" values=".35;1;.35" dur="2.2s" repeatCount="indefinite"/>
-  </circle>
-  <text x="600" y="329" text-anchor="middle" fill="#667a90" font-size="8.6" letter-spacing="1.7">BUILDING SOFTWARE THAT CARRIES OBJECTIVES FORWARD</text>
-</g>
-</svg>
+<g mask="url(#edgeFade)"><g mask="url(#edgeFadeY)"><rect x="18" y="6" width="1164" height="326" fill="url(#atmosphere)"/><rect x="18" y="6" width="1164" height="326" fill="url(#grid)" opacity=".92"/><ellipse cx="600" cy="163" rx="510" ry="168" fill="url(#halo)" filter="url(#soft)"/>
+<g opacity=".52" class="edgeStroke" fill="none" stroke-width="1"><path d="M96 68H238M962 68H1104M106 284H250M950 284H1094" stroke-opacity=".20"/><path d="M140 41H370M830 41H1060" stroke-opacity=".10"/></g>
+<g font-family="IBM Plex Mono,JetBrains Mono,ui-monospace,monospace"><text x="120" y="54" class="metaText" font-size="9.5" letter-spacing="2.35">IDENTITY // OPERATOR CHANNEL</text><text x="1080" y="54" text-anchor="end" class="online" font-size="9.5" letter-spacing="2">● ONLINE</text></g>
+<g id="sponge-cameo" clip-path="url(#nameWindow)" opacity="0"><animate attributeName="opacity" values="0;0;0;1;1;0;0" keyTimes="0;.18;.205;.225;.272;.30;1" dur="25s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="322 126;322 126;322 94;322 94;322 126;322 126" keyTimes="0;.205;.228;.27;.30;1" dur="25s" repeatCount="indefinite"/><rect x="-17" y="-13" width="34" height="44" rx="6" fill="#f4d94f" class="cameoStroke" stroke-opacity=".65"/><circle cx="-6.5" cy="0" r="4.6" fill="#fff"/><circle cx="6.5" cy="0" r="4.6" fill="#fff"/><circle cx="-6" cy="0" r="1.8" fill="#2787c8"/><circle cx="6" cy="0" r="1.8" fill="#2787c8"/><path d="M-8 12Q0 17 8 12" fill="none" stroke="#6c4a25" stroke-width="1.6"/></g>
+<g id="platypus-cameo" clip-path="url(#nameWindow)" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.52;.545;.60;.625;1" dur="29s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="866 130;866 130;866 94;866 94;866 130;866 130" keyTimes="0;.52;.548;.60;.628;1" dur="29s" repeatCount="indefinite"/><ellipse cx="0" cy="12" rx="20" ry="23" fill="#2ab8ad" class="cameoStroke" stroke-opacity=".48"/><ellipse cx="0" cy="17" rx="26" ry="7" fill="#e69936"/><path d="M-25 -3H25L16 -13H-13Z" fill="#68462a"/><rect x="-17" y="-9" width="34" height="5" rx="2" fill="#55351f"/></g>
+<g text-anchor="middle" font-family="Inter,Segoe UI,Arial,sans-serif"><text x="600" y="202" font-size="98" font-weight="900" letter-spacing="8.5" class="nameDepth" opacity=".86" transform="translate(0 9)">AARON SLUTSKY</text><text x="600" y="202" font-size="98" font-weight="900" letter-spacing="8.5" fill="none" class="nameCyanStroke" stroke-width="6" stroke-opacity=".12">AARON SLUTSKY</text><text x="600" y="202" font-size="98" font-weight="900" letter-spacing="8.5" fill="url(#nameFill)" class="nameOutline" stroke-opacity=".36" stroke-width=".75" filter="url(#glow)">AARON SLUTSKY</text><rect x="-270" y="104" width="185" height="116" rx="58" fill="url(#scan)" opacity=".30" transform="skewX(-18)"><animate attributeName="x" values="-270;1330" dur="11.5s" repeatCount="indefinite"/></rect><text x="600" y="253" font-family="IBM Plex Mono,JetBrains Mono,ui-monospace,monospace" class="userText" font-size="20" font-weight="700" letter-spacing="5.2">@coolguytuff</text><text x="600" y="284" font-family="IBM Plex Mono,JetBrains Mono,ui-monospace,monospace" class="metaText" font-size="10.2" letter-spacing="2.25">AI SYSTEMS // AUTONOMOUS AGENTS // AUTOMATION // EXPERIMENTAL SOFTWARE</text></g>
+<g font-family="IBM Plex Mono,JetBrains Mono,ui-monospace,monospace" opacity=".92"><path d="M450 307H750" class="edgeStroke" stroke-opacity=".13"/><circle cx="471" cy="315" r="2.8" class="online"><animate attributeName="opacity" values=".35;1;.35" dur="2.4s" repeatCount="indefinite"/></circle><text x="600" y="319" text-anchor="middle" class="metaText" font-size="8.5" letter-spacing="1.8">BUILDING SOFTWARE THAT CARRIES OBJECTIVES FORWARD</text></g>
+</g></g></svg>

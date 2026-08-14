@@ -11,6 +11,7 @@ on:
       - ".github/workflows/profile-assets.yml"
       - "scripts/generate_telemetry.py"
       - "scripts/generate_activity_world.py"
+      - "scripts/activity_world_*.py"
 
 permissions:
   contents: read
@@ -28,65 +29,48 @@ jobs:
     steps:
       - name: Check out profile repository
         uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
-
       - name: Generate 3D contribution topology
         uses: yoshi389111/github-profile-3d-contrib@9e3f937195cf840d364388973f73e3c4b3753586
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           USERNAME: ${{ github.repository_owner }}
-
       - name: Generate contribution source for Activity World
         uses: Platane/snk/svg-only@a041d6c27ba561a39f5be9c26a784812765e434b
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
             dist/activity-source.svg?palette=github-dark&color_snake=#7ff0ff
-
-      - name: Generate BRICK Activity World
+      - name: Generate TITAN Activity World
         env:
           CONTRIBUTION_SVG: dist/activity-source.svg
           ACTIVITY_WORLD_OUT: assets/activity-world.svg
         run: python3 scripts/generate_activity_world.py
-
       - name: Generate self-hosted telemetry
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
         run: python3 scripts/generate_telemetry.py
-
       - name: Validate generated SVG boundary
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import re
-          import xml.etree.ElementTree as ET
-
-          forbidden_tags = {'script', 'foreignObject', 'iframe', 'object', 'embed'}
-          root_dir = Path('profile-3d-contrib')
-          non_svg = [path for path in root_dir.rglob('*') if path.is_file() and path.suffix.lower() != '.svg']
+          import re, xml.etree.ElementTree as ET
+          forbidden={'script','foreignObject','iframe','object','embed'}
+          root_dir=Path('profile-3d-contrib')
+          non_svg=[p for p in root_dir.rglob('*') if p.is_file() and p.suffix.lower()!='.svg']
           assert not non_svg, f'unexpected non-SVG generated files: {non_svg}'
-
-          generated = sorted(root_dir.glob('*.svg')) + [Path('assets/telemetry.svg'), Path('assets/activity-world.svg')]
-          assert len(generated) >= 4, f'expected generated SVG set, got {generated}'
-
+          generated=sorted(root_dir.glob('*.svg'))+[Path('assets/telemetry.svg'),Path('assets/activity-world.svg')]
+          assert len(generated)>=4
           for path in generated:
-              assert path.is_file(), f'missing generated SVG: {path}'
-              text = path.read_text(encoding='utf-8')
-              doc = ET.fromstring(text)
-              lower = text.lower()
-              assert 'javascript:' not in lower, f'javascript URL in generated SVG: {path}'
-              assert not re.search(r'\bon[a-z]+\s*=', lower), f'inline event handler in generated SVG: {path}'
-              assert 'url(http://' not in lower and 'url(https://' not in lower, f'external CSS resource in generated SVG: {path}'
+              text=path.read_text(encoding='utf-8'); doc=ET.fromstring(text); lower=text.lower()
+              assert 'javascript:' not in lower and not re.search(r'\bon[a-z]+\s*=', lower)
+              assert 'url(http://' not in lower and 'url(https://' not in lower
               for element in doc.iter():
-                  tag = element.tag.rsplit('}', 1)[-1]
-                  assert tag not in forbidden_tags, f'forbidden <{tag}> in generated SVG: {path}'
-                  for attribute, value in element.attrib.items():
-                      local = attribute.rsplit('}', 1)[-1]
-                      if local in {'href', 'src'}:
-                          assert value.startswith('#'), f'external resource reference in generated SVG: {path}: {value}'
+                  tag=element.tag.rsplit('}',1)[-1]; assert tag not in forbidden
+                  for attribute,value in element.attrib.items():
+                      if attribute.rsplit('}',1)[-1] in {'href','src'}: assert value.startswith('#')
           print(f'validated {len(generated)} generated SVGs before publish')
           PY
-
       - name: Package generated assets
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
@@ -107,13 +91,11 @@ jobs:
     steps:
       - name: Check out profile repository
         uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
-
       - name: Download generated assets
         uses: actions/download-artifact@484a0b528fb4d7bd804637ccb632e47a0e638317
         with:
           name: generated-profile-assets
           path: .
-
       - name: Commit only generated profile assets
         run: |
           set -euo pipefail
