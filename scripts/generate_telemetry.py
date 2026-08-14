@@ -44,6 +44,24 @@ def short_date(value: str | None) -> str:
         return "UNKNOWN"
 
 
+def exact_percentages(items: list[tuple[str, int]]) -> list[int]:
+    """Allocate whole percentages with largest remainders so the result sums to 100."""
+    total = sum(count for _, count in items)
+    if total <= 0 or not items:
+        return [0 for _ in items]
+    exact = [(count * 100) / total for _, count in items]
+    whole = [int(value) for value in exact]
+    remaining = 100 - sum(whole)
+    order = sorted(
+        range(len(items)),
+        key=lambda index: (exact[index] - whole[index], items[index][1]),
+        reverse=True,
+    )
+    for index in order[:remaining]:
+        whole[index] += 1
+    return whole
+
+
 def collect():
     user = request_json(f"/users/{OWNER}")
     repos = request_json(f"/users/{OWNER}/repos?per_page=100&type=owner&sort=pushed")
@@ -90,6 +108,7 @@ def fallback():
 def render(data) -> str:
     languages = data["top_langs"]
     language_total = sum(count for _, count in languages) or 1
+    language_percentages = exact_percentages(languages)
     metric_boxes = [
         ("PUBLIC REPOS", data["public_repos"], "VISIBLE BUILDS"),
         ("ORIGINAL", data["originals"], "NON-FORK REPOS"),
@@ -111,11 +130,10 @@ def render(data) -> str:
 
     rows = []
     if languages:
-        for index, (language, count) in enumerate(languages):
+        for index, ((language, count), percent) in enumerate(zip(languages, language_percentages)):
             y = 306 + index * 42
             fraction = count / language_total
             width = max(55, round(fraction * 650))
-            percent = round(fraction * 100)
             color = PALETTE[index % len(PALETTE)]
             rows.append(f'''<g>
   <text x="42" y="{y}" fill="#bac7d8" font-size="11.5">{esc(language.upper())}</text>
