@@ -1,114 +1,56 @@
 from __future__ import annotations
 
+import math
+from dataclasses import dataclass
 from activity_world_model import Frame, fmt
 
+@dataclass(frozen=True)
+class Pose:
+    torso:float; pelvis_y:float; head:float
+    shoulder_far:float; elbow_far:float; shoulder_near:float; elbow_near:float
+    hip_far:float; knee_far:float; hip_near:float; knee_near:float
+    fist_near_scale:float; body_bob:float
 
-def _state_values(frames: list[Frame], state: str) -> str:
-    return ';'.join('1' if frame.state == state else '0' for frame in frames)
+def _lerp(a,b,p): return a+(b-a)*p
 
+def pose_for(frame:Frame)->Pose:
+    p=max(0.0,min(1.0,frame.phase))
+    if frame.state=='sprint':
+        s=math.sin(p*math.tau); c=math.cos(p*math.tau)
+        return Pose(-13+3*c,3.5*abs(s),7-2*c,42*s-10,48+20*max(0,-s),-42*s+12,52+18*max(0,s),-34*s+4,30+38*max(0,s),34*s-4,30+38*max(0,-s),1.08+.13*max(0,-s),2.5*abs(s))
+    if frame.state=='jump':
+        if p<.15:
+            q=p/.15; return Pose(-7,8*q,4,-30,74,28,68,25,80,-22,78,1.18,6*q)
+        if p<.45:
+            q=(p-.15)/.30; return Pose(_lerp(-7,-3,q),_lerp(8,-2,q),_lerp(4,-2,q),_lerp(-30,-72,q),_lerp(74,26,q),_lerp(28,52,q),_lerp(68,34,q),_lerp(25,-20,q),_lerp(80,24,q),_lerp(-22,18,q),_lerp(78,28,q),1.25,_lerp(6,-2,q))
+        if p<.78:
+            q=(p-.45)/.33; return Pose(-3,-2,-2,-72,26,52,34,_lerp(-20,18,q),_lerp(24,62,q),_lerp(18,-12,q),_lerp(28,66,q),1.28,-2)
+        q=(p-.78)/.22; return Pose(_lerp(-3,4,q),_lerp(-2,10,q),_lerp(-2,6,q),_lerp(-72,-20,q),_lerp(26,72,q),_lerp(52,18,q),_lerp(34,76,q),_lerp(18,22,q),_lerp(62,86,q),_lerp(-12,-20,q),_lerp(66,84,q),_lerp(1.28,1.18,q),_lerp(-2,8,q))
+    if frame.state=='climb':
+        if p<.20:
+            q=p/.20; return Pose(_lerp(-8,-15,q),2,_lerp(4,-5,q),_lerp(0,-70,q),_lerp(60,18,q),_lerp(10,-98,q),_lerp(55,12,q),-8,52,12,45,_lerp(1.14,1.28,q),1)
+        if p<.48:
+            q=(p-.20)/.28; return Pose(-15,8+2*math.sin(q*math.pi),-5,-72,20,-102,10,-18,66,18,58,1.30,7)
+        if p<.80:
+            q=(p-.48)/.32; return Pose(_lerp(-15,-5,q),_lerp(8,1,q),_lerp(-5,1,q),_lerp(-72,-36,q),_lerp(20,88,q),_lerp(-102,-42,q),_lerp(10,92,q),_lerp(-18,22,q),_lerp(66,88,q),_lerp(18,-12,q),_lerp(58,92,q),_lerp(1.30,1.20,q),_lerp(7,1,q))
+        q=(p-.80)/.20; return Pose(_lerp(-5,0,q),_lerp(1,0,q),_lerp(1,0,q),_lerp(-36,0,q),_lerp(88,55,q),_lerp(-42,0,q),_lerp(92,55,q),_lerp(22,0,q),_lerp(88,20,q),_lerp(-12,0,q),_lerp(92,20,q),_lerp(1.20,1.14,q),_lerp(1,0,q))
+    if frame.state=='turn':
+        s=math.sin(p*math.pi); return Pose(18*s,5*s,-12*s,-25*s,62,32*s,64,22*s,72,-18*s,72,1.20,4*s)
+    breathe=math.sin(frame.t*2) if frame.t else 0
+    return Pose(0,0,-breathe,-6,58,6,58,-2,22,2,22,1.16,.8*breathe)
 
-def titan_body(pose: str) -> str:
-    if pose == 'sprint':
-        torso_rot, head = -11, (8, -79)
-        far_arm, far_fist = 'M-20 -58 Q-39 -46 -44 -27', (-45, -27)
-        near_arm, near_fist = 'M20 -55 Q41 -48 49 -30', (50, -30)
-        leg1, foot1 = 'M-13 -9 Q-28 10 -38 25', (-39, 27)
-        leg2, foot2 = 'M13 -8 Q24 7 35 19', (37, 21)
-    elif pose == 'climb':
-        torso_rot, head = -7, (3, -84)
-        far_arm, far_fist = 'M-20 -58 Q-39 -71 -42 -92', (-42, -94)
-        near_arm, near_fist = 'M21 -57 Q42 -75 46 -101', (46, -103)
-        leg1, foot1 = 'M-12 -8 Q-29 5 -31 23', (-32, 25)
-        leg2, foot2 = 'M12 -8 Q24 4 20 23', (21, 25)
-    elif pose == 'jump':
-        torso_rot, head = -5, (2, -80)
-        far_arm, far_fist = 'M-20 -58 Q-39 -85 -34 -109', (-34, -111)
-        near_arm, near_fist = 'M21 -58 Q46 -49 58 -24', (59, -23)
-        leg1, foot1 = 'M-12 -8 Q-25 5 -30 20', (-31, 22)
-        leg2, foot2 = 'M12 -8 Q24 4 30 20', (32, 22)
-    elif pose == 'turn':
-        torso_rot, head = 5, (-3, -80)
-        far_arm, far_fist = 'M-19 -57 Q-35 -45 -39 -28', (-40, -28)
-        near_arm, near_fist = 'M20 -57 Q33 -45 39 -28', (40, -28)
-        leg1, foot1 = 'M-13 -8 Q-22 8 -18 25', (-20, 27)
-        leg2, foot2 = 'M13 -8 Q23 8 19 25', (21, 27)
-    else:
-        torso_rot, head = 0, (0, -80)
-        far_arm, far_fist = 'M-20 -58 Q-37 -48 -39 -30', (-40, -30)
-        near_arm, near_fist = 'M20 -58 Q37 -48 39 -30', (40, -30)
-        leg1, foot1 = 'M-12 -8 Q-20 8 -20 26', (-22, 28)
-        leg2, foot2 = 'M12 -8 Q20 8 20 26', (22, 28)
+def _rot(name,frames,total,getter):
+    keys=';'.join(fmt(f.t/total) for f in frames); vals=';'.join(f'{fmt(getter(pose_for(f)))} 0 0' for f in frames)
+    return f'<animateTransform id="{name}" attributeName="transform" type="rotate" values="{vals}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/>'
 
-    hx, hy = head
-    ffx, ffy = far_fist
-    nfx, nfy = near_fist
-    f1x, f1y = foot1
-    f2x, f2y = foot2
-    return f'''
-<g transform="rotate({torso_rot})">
-  <circle cx="-24" cy="-56" r="14" fill="url(#greenFar)" stroke="#75d887" stroke-opacity=".24"/>
-  <path d="{far_arm}" fill="none" stroke="url(#greenFar)" stroke-width="17" stroke-linecap="round"/>
-  <g transform="translate({ffx} {ffy})"><ellipse rx="12.5" ry="11.5" fill="url(#greenFar)" stroke="#83e893" stroke-opacity=".32"/><path d="M-7 -3H7M-6 2H7" stroke="#0a4b20" stroke-width="1.1" opacity=".58"/></g>
-  <path d="{leg1}" fill="none" stroke="url(#legGreen)" stroke-width="18" stroke-linecap="round"/>
-  <ellipse cx="{f1x}" cy="{f1y}" rx="16" ry="8" fill="#11241a" stroke="#4cd56f" stroke-opacity=".45"/>
-
-  <ellipse cx="0" cy="-61" rx="35" ry="24" fill="url(#trapGreen)" stroke="#8ffca5" stroke-opacity=".30"/>
-  <path d="M-34 -57 Q-28 -80 0 -83 Q28 -80 34 -57 Q36 -31 23 -15 Q0 -4 -23 -15 Q-36 -31 -34 -57Z" fill="url(#torsoGreen)" stroke="#8ffca5" stroke-opacity=".44" stroke-width="1.25" filter="url(#titanShadow)"/>
-  <ellipse cx="-12" cy="-53" rx="15.5" ry="12" fill="url(#pecGreen)" opacity=".94"/>
-  <ellipse cx="12" cy="-53" rx="15.5" ry="12" fill="url(#pecGreen)" opacity=".94"/>
-  <path d="M0 -66V-29M-22 -38Q0 -27 22 -38" stroke="#073d1b" stroke-width="1.5" opacity=".72" fill="none"/>
-  <path d="M-17 -29Q0 -21 17 -29M-13 -23Q0 -17 13 -23" stroke="#8eff9e" stroke-width="1" opacity=".22" fill="none"/>
-
-  <path d="M-19 -18 Q0 -10 19 -18 L18 4 Q8 11 0 8 Q-8 11 -18 4Z" fill="url(#shorts)" stroke="#68718d" stroke-width="1"/>
-  <path d="M0 -13V7" stroke="#75eaff" stroke-opacity=".42" stroke-width="1.3"/>
-  <path d="{leg2}" fill="none" stroke="url(#greenNear)" stroke-width="20" stroke-linecap="round"/>
-  <ellipse cx="{f2x}" cy="{f2y}" rx="17.5" ry="8.7" fill="#14251b" stroke="#83ff9d" stroke-opacity=".56"/>
-
-  <path d="M-11 -75L-9 -89H9L12 -75Z" fill="url(#neckGreen)"/>
-  <g transform="translate({hx} {hy})">
-    <path d="M-15 -7 Q-10 -19 1 -19 Q14 -16 17 -5 L13 13 Q4 20 -8 16 Q-16 8 -15 -7Z" fill="url(#faceGreen)" stroke="#b0ffbe" stroke-opacity=".40"/>
-    <path d="M-12 -6L-2 -2M5 -2L14 -6" stroke="#052b14" stroke-width="2.8" stroke-linecap="round"/>
-    <path d="M-7 7 Q1 13 9 7" stroke="#082b17" stroke-width="2.1" fill="none"/>
-    <path d="M-5 8L-2 11M1 10L4 12M7 8L10 10" stroke="#f1fff2" stroke-width="1.5"/>
-    <circle cx="-4" cy="0" r="1.6" fill="#b8ffff" filter="url(#softGlow)"/><circle cx="7" cy="0" r="1.6" fill="#d7b5ff" filter="url(#softGlow)"/>
-  </g>
-
-  <circle cx="25" cy="-56" r="16.5" fill="url(#greenNear)" stroke="#a6ffb1" stroke-opacity=".38"/>
-  <path d="{near_arm}" fill="none" stroke="url(#greenNear)" stroke-width="20" stroke-linecap="round"/>
-  <g transform="translate({nfx} {nfy})"><ellipse rx="16.5" ry="14.5" fill="url(#fistGreen)" stroke="#baffc3" stroke-opacity=".46"/><path d="M-10 -5H10M-8 1H10M-5 7H8" stroke="#0b4d22" stroke-width="1.25" opacity=".64"/></g>
-
-  <path d="M-22 -68 Q0 -59 22 -68M-15 -24Q0 -18 15 -24" fill="none" stroke="url(#energy)" stroke-width="1.55" opacity=".56" filter="url(#softGlow)"/>
-  <path d="M-26 -52Q-20 -43 -16 -38M26 -52Q20 -43 16 -38" stroke="#d8ffd9" stroke-width="1" opacity=".18"/>
-  <circle cx="0" cy="-41" r="2.5" fill="#9ff7ff" opacity=".82" filter="url(#softGlow)"/>
-</g>'''
-
-
-def render_titan(frames: list[Frame], total: float) -> str:
-    key_times = ';'.join(fmt(frame.t / total) for frame in frames)
-    positions = ';'.join(f'{fmt(frame.x)} {fmt(frame.y)}' for frame in frames)
-    scales = ';'.join(f'{fmt(frame.sx)} {fmt(frame.sy)}' for frame in frames)
-    directions = ';'.join(f'{frame.direction} 1' for frame in frames)
-
-    pose_groups = []
-    for state, offset in (('idle', -40), ('jump', -40), ('climb', -40), ('sprint', -40), ('turn', -40)):
-        body_pose = 'neutral' if state == 'idle' else state
-        pose_groups.append(f'''
-      <g id="titan-{state}" opacity="{'1' if state == 'idle' else '0'}">
-        <animate attributeName="opacity" calcMode="discrete" values="{_state_values(frames, state)}" keyTimes="{key_times}" dur="{fmt(total)}s" repeatCount="indefinite"/>
-        <g transform="translate(0 {offset})"><g transform="scale(1.55)">{titan_body(body_pose)}</g></g>
-      </g>''')
-
-    return f'''<!-- TITAN_BODY_DEPTH -->
-<!-- BRICK_STATE_JUMP --><!-- BRICK_STATE_CLIMB --><!-- BRICK_STATE_SPRINT --><!-- BRICK_STATE_TURN -->
-<!-- BRICK_ROUTE_FORWARD --><!-- BRICK_ROUTE_REVERSE -->
-<g id="titan-motion" transform="translate({fmt(frames[0].x)} {fmt(frames[0].y)})">
-  <animateTransform attributeName="transform" type="translate" values="{positions}" keyTimes="{key_times}" dur="{fmt(total)}s" repeatCount="indefinite"/>
-  <g id="titan-direction">
-    <animateTransform attributeName="transform" type="scale" calcMode="discrete" values="{directions}" keyTimes="{key_times}" dur="{fmt(total)}s" repeatCount="indefinite"/>
-    <g id="titan-squash">
-      <animateTransform attributeName="transform" type="scale" values="{scales}" keyTimes="{key_times}" dur="{fmt(total)}s" repeatCount="indefinite"/>
-      <ellipse cx="0" cy="8" rx="43" ry="10" fill="#02050a" opacity=".42" filter="url(#blur4)"/>
-      {''.join(pose_groups)}
-    </g>
-  </g>
-</g>'''
+def render_titan(frames:list[Frame],total:float)->str:
+    keys=';'.join(fmt(f.t/total) for f in frames); pos=';'.join(f'{fmt(f.x)} {fmt(f.y)}' for f in frames); scales=';'.join(f'{fmt(f.sx)} {fmt(f.sy)}' for f in frames); dirs=';'.join(f'{f.direction} 1' for f in frames); pelvis=';'.join(f'0 {fmt(pose_for(f).pelvis_y+pose_for(f).body_bob)}' for f in frames); fists=';'.join(f'{fmt(pose_for(f).fist_near_scale)} {fmt(pose_for(f).fist_near_scale)}' for f in frames)
+    return f'''<!-- TITAN_BODY_DEPTH --><!-- TITAN_CONTINUOUS_RIG --><!-- TITAN_FOOT_CONTACT_CYCLE --><!-- BRICK_STATE_JUMP --><!-- BRICK_STATE_CLIMB --><!-- BRICK_STATE_SPRINT --><!-- BRICK_STATE_TURN --><!-- BRICK_ROUTE_FORWARD --><!-- BRICK_ROUTE_REVERSE -->
+<g id="titan-motion"><animateTransform attributeName="transform" type="translate" values="{pos}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/><g id="titan-direction"><animateTransform attributeName="transform" type="scale" calcMode="discrete" values="{dirs}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/><g id="titan-squash"><animateTransform attributeName="transform" type="scale" values="{scales}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/><ellipse cx="0" cy="7" rx="58" ry="13" fill="#000" opacity=".40" filter="url(#blur4)"/><g id="titan-pelvis"><animateTransform attributeName="transform" type="translate" values="{pelvis}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/>
+<g id="far-hip">{_rot('far-hip-anim',frames,total,lambda p:p.hip_far)}<ellipse cx="-14" cy="-8" rx="19" ry="22" fill="url(#greenFar)"/><rect x="-22" y="-3" width="19" height="42" rx="9" fill="url(#greenFar)"/><g transform="translate(-13 34)">{_rot('far-knee-anim',frames,total,lambda p:p.knee_far)}<rect x="-9" width="18" height="39" rx="9" fill="url(#greenFar)"/><ellipse cx="3" cy="42" rx="23" ry="9" fill="#172019" stroke="#61d777" stroke-opacity=".45"/></g></g>
+<g id="far-shoulder" transform="translate(-39 -72)">{_rot('far-shoulder-anim',frames,total,lambda p:p.shoulder_far)}<ellipse rx="24" ry="22" fill="url(#greenFar)"/><rect x="-11" y="-1" width="22" height="48" rx="11" fill="url(#greenFar)"/><g transform="translate(0 44)">{_rot('far-elbow-anim',frames,total,lambda p:p.elbow_far)}<rect x="-9" width="18" height="43" rx="9" fill="url(#greenFar)"/><ellipse cy="47" rx="17" ry="15" fill="url(#greenFar)"/></g></g>
+<path d="M-29 -18Q0 -8 29 -18L32 10L17 18L5 11L-5 19L-18 12L-33 9Z" fill="url(#shortsPurple)" stroke="#b284c8" stroke-opacity=".5"/><path d="M-31 6L-40 16L-24 12M32 6L42 15L25 12" fill="none" stroke="#c297d6" stroke-width="2" opacity=".58"/>
+<g id="near-hip">{_rot('near-hip-anim',frames,total,lambda p:p.hip_near)}<ellipse cx="15" cy="-8" rx="22" ry="24" fill="url(#greenNear)"/><rect x="5" y="-3" width="22" height="44" rx="11" fill="url(#greenNear)"/><g transform="translate(15 36)">{_rot('near-knee-anim',frames,total,lambda p:p.knee_near)}<rect x="-10" width="20" height="43" rx="10" fill="url(#greenNear)"/><ellipse cx="5" cy="46" rx="26" ry="10" fill="#151e19" stroke="#91ff9e" stroke-opacity=".58"/></g></g>
+<g id="titan-torso" transform="translate(0 -16)">{_rot('torso-anim',frames,total,lambda p:p.torso)}<path d="M-60 -63Q-50 -105 -20 -112Q0 -124 20 -112Q50 -105 60 -63Q56 -25 32 -9Q0 6 -32 -9Q-56 -25 -60 -63Z" fill="url(#torsoGreen)" stroke="#c5ffca" stroke-opacity=".46" stroke-width="1.5" filter="url(#titanShadow)"/><ellipse cx="-29" cy="-90" rx="38" ry="24" fill="url(#trapGreen)" transform="rotate(17 -29 -90)"/><ellipse cx="29" cy="-90" rx="38" ry="24" fill="url(#trapGreen)" transform="rotate(-17 29 -90)"/><ellipse cx="-21" cy="-64" rx="28" ry="19" fill="url(#pecGreen)"/><ellipse cx="21" cy="-64" rx="28" ry="19" fill="url(#pecGreen)"/><path d="M0 -80V-22M-35 -39Q0 -23 35 -39M-23 -29Q0 -19 23 -29M-17 -18Q0 -11 17 -18" fill="none" stroke="#063b19" stroke-width="2.2" opacity=".7"/>
+<path d="M-17 -101L-14 -124H14L18 -101Z" fill="url(#neckGreen)"/><g id="titan-head" transform="translate(0 -128)">{_rot('head-anim',frames,total,lambda p:p.head)}<path d="M-22 -8Q-18 -32 0 -35Q20 -31 24 -7L20 19Q6 30 -12 24Q-25 12 -22 -8Z" fill="url(#faceGreen)" stroke="#d0ffd4" stroke-opacity=".42"/><path d="M-21 -11L-29 -25L-17 -21L-20 -35L-7 -28L-2 -40L6 -28L15 -38L15 -26L27 -31L21 -13Q4 -22 -21 -11Z" fill="#0a100d"/><path d="M-18 -6L-5 -1M6 -1L20 -6" stroke="#062b13" stroke-width="3.5" stroke-linecap="round"/><circle cx="-6" cy="2" r="2.1" fill="#fff"/><circle cx="9" cy="2" r="2.1" fill="#fff"/><path d="M-10 13Q2 22 14 12" fill="none" stroke="#072813" stroke-width="3"/><path d="M-7 14L-3 18M2 18L7 17M10 14L14 16" stroke="#fff" stroke-width="1.8"/></g>
+<g id="near-shoulder" transform="translate(45 -76)">{_rot('near-shoulder-anim',frames,total,lambda p:p.shoulder_near)}<ellipse rx="29" ry="26" fill="url(#greenNear)" stroke="#d2ffd5" stroke-opacity=".43"/><rect x="-13" y="-1" width="26" height="52" rx="13" fill="url(#greenNear)"/><g transform="translate(0 48)">{_rot('near-elbow-anim',frames,total,lambda p:p.elbow_near)}<rect x="-12" width="24" height="48" rx="12" fill="url(#greenNear)"/><g id="near-fist" transform="translate(0 54)"><animateTransform attributeName="transform" type="scale" additive="sum" values="{fists}" keyTimes="{keys}" dur="{fmt(total)}s" repeatCount="indefinite"/><ellipse rx="27" ry="23" fill="url(#fistGreen)" stroke="#ddffdf" stroke-opacity=".52"/><path d="M-17 -8H17M-14 0H18M-10 9H13" stroke="#09491f" stroke-width="1.9" opacity=".7"/></g></g></g></g></g></g></g></g>'''
