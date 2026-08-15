@@ -34,7 +34,9 @@ jobs:
           python3 -m py_compile scripts/generate_telemetry.py
           python3 -m py_compile scripts/generate_activity_world.py scripts/activity_world_model.py scripts/activity_world_titan.py scripts/activity_world_render.py
       - name: Test Activity World generator
-        run: python3 -m unittest tests.test_generate_activity_world -v
+        run: |
+          python3 -m unittest tests.test_generate_activity_world -v
+          python3 -m unittest tests.test_titan_face_direction_v7 -v
       - name: Validate local assets and README references
         run: |
           python3 - <<'PY'
