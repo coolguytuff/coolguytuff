@@ -100,23 +100,24 @@ class ActivityWorldTests(unittest.TestCase):
 
     def test_hulk_visual_contract_has_directional_profile_and_mass(self):
         weeks=model.group_weeks(model.parse_cells(fixture_svg())); frames,_=model.build_frames(weeks); output=titan.render_titan(frames,frames[-1].t)
-        for marker in ('HULK_MASS_SILHOUETTE','HULK_DIRECTIONAL_PROFILE','BIOMECHANICAL_MOTION_V5','id="titan-hair"','id="titan-face"','id="titan-ear"','id="titan-nose"','id="titan-eye-near"','id="titan-brow"','id="titan-jaw"','id="titan-mouth"','id="titan-traps"','id="titan-chest"','id="titan-purple-shorts"'):
+        for marker in ('HULK_MASS_SILHOUETTE','HULK_DIRECTIONAL_PROFILE','TRUE_SIDE_FACING_PROFILE_V7','BIOMECHANICAL_MOTION_V5','id="titan-hair"','id="titan-face"','id="titan-ear"','id="titan-nose"','id="titan-eye-near"','id="titan-brow"','id="titan-jaw"','id="titan-mouth"','id="titan-traps"','id="titan-chest"','id="titan-purple-shorts"'):
             self.assertIn(marker,output)
-        self.assertIn('id="titan-head" transform="translate(8 -156)"',output)
+        self.assertIn('id="titan-head" transform="translate(16 -156)"',output)
 
-    def test_canonical_hulk_art_reads_as_right_facing_three_quarter_profile(self):
+    def test_canonical_hulk_art_reads_as_true_right_facing_side_profile(self):
         weeks=model.group_weeks(model.parse_cells(fixture_svg())); frames,_=model.build_frames(weeks); output=titan.render_titan(frames,frames[-1].t)
-        for marker in ('TRUE_RIGHT_FACING_PROFILE_V6','id="titan-profile-nose-tip"','id="titan-cheek-forward"','id="titan-back-plane"','id="titan-sternum-forward"'):
+        for marker in ('TRUE_SIDE_FACING_PROFILE_V7','id="titan-face-silhouette-forward"','id="titan-profile-nose-tip"','id="titan-nose-silhouette"','id="titan-chin-forward"','id="titan-brow-ridge-forward"','id="titan-cheek-forward"','id="titan-back-plane"','id="titan-sternum-forward"','id="titan-forward-ribcage"'):
             self.assertIn(marker,output)
-        self.assertIn('id="titan-eye-far" opacity=".24"',output)
+        self.assertIn('id="titan-eye-far" opacity=".08"',output)
         self.assertIn('id="titan-eye-near"',output)
+        self.assertIn('id="titan-ear" cx="-28"',output)
 
     def test_directional_chest_uses_depth_staging_instead_of_front_on_symmetry(self):
-        weeks=model.group_weeks(model.parse_cells(fixture_svg())); frames,_=model.build_frames(weeks); output=titan.render_titan(frames,frames[-1].t)
-        self.assertIn('id="titan-pec-far" transform="translate(-9 0) scale(.64 1)"',output)
-        self.assertIn('id="titan-pec-near" transform="translate(8 0) scale(1.08 1)"',output)
-        self.assertIn('id="far-shoulder" transform="translate(-48 -91) scale(.78)"',output)
-        self.assertIn('id="near-shoulder" transform="translate(76 -86) scale(1.06)"',output)
+        weeks=activity.group_weeks(activity.parse_cells(fixture_svg())); frames,_=activity.build_frames(weeks); output=titan.render_titan(frames,frames[-1].t)
+        self.assertIn('id="titan-pec-far" transform="translate(-15 0) scale(.42 1)"',output)
+        self.assertIn('id="titan-pec-near" transform="translate(14 0) scale(1.16 1)"',output)
+        self.assertIn('id="far-shoulder" transform="translate(-36 -92) scale(.58)"',output)
+        self.assertIn('id="near-shoulder" transform="translate(84 -85) scale(1.12)"',output)
 
     def test_spring_physics_deforms_then_settles(self):
         a=render._spring_response(0,7,'feet'); b=render._spring_response(.18,7,'feet'); c=render._spring_response(1.8,7,'feet'); self.assertNotEqual(a,(0,1,1,0)); self.assertNotEqual(b,(0,1,1,0)); self.assertEqual(c,(0,1,1,0)); self.assertTrue(a[1]>1 or a[2]<1)
@@ -132,7 +133,7 @@ class ActivityWorldTests(unittest.TestCase):
 
     def test_render_is_valid_safe_rigged_3d_svg(self):
         output=activity.render_activity_world(activity.parse_cells(fixture_svg())); ET.fromstring(output); lower=output.lower(); self.assertNotIn('<script',lower); self.assertNotIn('javascript:',lower)
-        for marker in ('BRICK_ROUTE_FORWARD','BRICK_ROUTE_REVERSE','COLUMN_SETTLE','BRICK_STATE_JUMP','BRICK_STATE_CLIMB','BRICK_STATE_SPRINT','BRICK_STATE_TURN','TITAN_BODY_DEPTH','TITAN_CONTINUOUS_RIG','TITAN_FOOT_CONTACT_CYCLE','HULK_DIRECTIONAL_PROFILE','BIOMECHANICAL_MOTION_V5','JELLO_SPRING_PHYSICS','TOWER_TOP_FACE','TOWER_FRONT_FACE','TOWER_SIDE_FACE','near-shoulder-anim','near-elbow-anim','near-hip-anim','near-knee-anim','camera-follow','ACTIVITY WORLD // TITAN RUN'):
+        for marker in ('BRICK_ROUTE_FORWARD','BRICK_ROUTE_REVERSE','COLUMN_SETTLE','BRICK_STATE_JUMP','BRICK_STATE_CLIMB','BRICK_STATE_SPRINT','BRICK_STATE_TURN','TITAN_BODY_DEPTH','TITAN_CONTINUOUS_RIG','TITAN_FOOT_CONTACT_CYCLE','HULK_DIRECTIONAL_PROFILE','TRUE_SIDE_FACING_PROFILE_V7','BIOMECHANICAL_MOTION_V5','JELLO_SPRING_PHYSICS','TOWER_TOP_FACE','TOWER_FRONT_FACE','TOWER_SIDE_FACE','near-shoulder-anim','near-elbow-anim','near-hip-anim','near-knee-anim','camera-follow','ACTIVITY WORLD // TITAN RUN'):
             self.assertIn(marker,output)
 
 if __name__=='__main__': unittest.main()
