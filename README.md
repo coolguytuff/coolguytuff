@@ -1,7 +1,6 @@
 <!--
   AARON SLUTSKY // @coolguytuff
-  DAVE COMMAND PROFILE
-  Primary visuals are self-hosted in this repository.
+  SELF-HOSTED GITHUB PROFILE VISUALS
 -->
 
 <p align="center">
@@ -27,33 +26,12 @@
 <br/>
 
 <p align="center">
-  <img width="100%" src="./assets/dave-command-core.svg" alt="Dave Command Core — Aaron's animated pseudo-3D personal Agent OS visualization" />
+  <img width="100%" src="./assets/dave-command-core.svg" alt="Animated pseudo-3D command-core visual" />
 </p>
-
-<p align="center"><sub><b>DAVE // PRIVATE R&D</b> · slow pseudo-3D turntable motion · GitHub-native SVG · no JavaScript · no separate site</sub></p>
-
-## `01 // DAVE`
-
-> **Dave** is my private experimental **Personal Agent OS** — an attempt to make one coherent system out of identity, context, agents, teams, tools, execution, evaluation, governance, and recovery.
-
-<table>
-<tr>
-<td width="33%" valign="top"><b>IDENTITY</b><br/><sub>Persistent context and a stable system identity across work.</sub></td>
-<td width="33%" valign="top"><b>EXECUTION</b><br/><sub>Agents and teams that can carry long-running objectives through tools and workflows.</sub></td>
-<td width="33%" valign="top"><b>GOVERNANCE</b><br/><sub>Authority, routing, safety, evidence, and recovery are system properties — not afterthoughts.</sub></td>
-</tr>
-<tr>
-<td width="33%" valign="top"><b>EVALUATION</b><br/><sub>Outcomes are observed and judged instead of assumed successful.</sub></td>
-<td width="33%" valign="top"><b>LOCAL-FIRST</b><br/><sub>Use local capability where it is appropriate, with explicit routing and graceful fallback.</sub></td>
-<td width="33%" valign="top"><b>EVOLUTION</b><br/><sub>Capabilities can improve through governed experimentation rather than uncontrolled self-modification.</sub></td>
-</tr>
-</table>
-
-<sub>The repository is private while I build it. This profile describes the direction at a high level, not private implementation details.</sub>
 
 ---
 
-## `02 // SIGNAL`
+## `01 // SIGNAL`
 
 I’m interested in the point where AI stops being a chat box and starts becoming a **system**: persistent context, tools, planning, execution, evidence, evaluation, recovery, coordination, and actual completion.
 
@@ -87,7 +65,7 @@ I’m interested in the point where AI stops being a chat box and starts becomin
 
 ---
 
-## `03 // EXECUTION LOOP`
+## `02 // EXECUTION LOOP`
 
 <p align="center">
   <img width="100%" src="./assets/execution-loop.svg" alt="Closed-loop execution: intent, reason, plan, act, evidence, evaluate, ship or repair" />
@@ -95,7 +73,7 @@ I’m interested in the point where AI stops being a chat box and starts becomin
 
 ---
 
-## `04 // BUILD DOMAINS`
+## `03 // BUILD DOMAINS`
 
 <table>
 <tr>
@@ -138,7 +116,7 @@ Research complex products, map behavior and architecture, then use that understa
 
 ---
 
-## `05 // PUBLIC LAB`
+## `04 // PUBLIC LAB`
 
 Public GitHub is only one slice of what I’m working on. I keep forked research repos visibly labeled instead of presenting upstream work as mine.
 
@@ -155,7 +133,7 @@ Public GitHub is only one slice of what I’m working on. I keep forked research
 
 ---
 
-## `06 // TOOL DECK`
+## `05 // TOOL DECK`
 
 <p align="center">
   <img width="100%" src="./assets/tool-deck.svg" alt="Capability tool deck covering languages, runtimes, data, automation, and agent infrastructure" />
@@ -163,7 +141,7 @@ Public GitHub is only one slice of what I’m working on. I keep forked research
 
 ---
 
-## `07 // TELEMETRY`
+## `06 // TELEMETRY`
 
 <p align="center">
   <img width="100%" src="./assets/telemetry.svg" alt="Self-hosted GitHub telemetry including public repositories, repository mix, latest public activity, and language distribution" />
@@ -173,7 +151,7 @@ Public GitHub is only one slice of what I’m working on. I keep forked research
 
 ---
 
-## `08 // OPERATING PRINCIPLES`
+## `07 // OPERATING PRINCIPLES`
 
 ```text
 01  build the real thing, not a demo of the thing
