@@ -53,23 +53,7 @@
 
 ---
 
-## `02 // ACTIVITY WORLD`
-
-<div align="center">
-
-**The contribution graph becomes a world instead of a chart.** TITAN is an original green synthetic powerhouse running across contribution-derived 3D block terrain. Rough changes trigger leaps, modest rises trigger a ledge grab + pull-up, flat runs of 3+ blocks trigger a sprint, and every impact squishes the terrain before it settles exactly back to its real data height.
-
-<p>
-  <img width="100%" src="./assets/activity-world.svg" alt="Cinematic 3D Activity World where TITAN traverses contribution-derived block terrain by jumping, climbing, sprinting, turning around, and making columns wobble back to their data heights" />
-</p>
-
-<sub>`TITAN // follow-cam traversal // forward + reverse // generated from real contribution signal`</sub>
-
-</div>
-
----
-
-## `03 // SIGNAL`
+## `02 // SIGNAL`
 
 I’m interested in the point where AI stops being a chat box and starts becoming a **system**: persistent context, tools, planning, execution, evidence, evaluation, recovery, coordination, and actual completion.
 
@@ -103,7 +87,7 @@ I’m interested in the point where AI stops being a chat box and starts becomin
 
 ---
 
-## `04 // EXECUTION LOOP`
+## `03 // EXECUTION LOOP`
 
 <p align="center">
   <img width="100%" src="./assets/execution-loop.svg" alt="Closed-loop execution: intent, reason, plan, act, evidence, evaluate, ship or repair" />
@@ -111,7 +95,7 @@ I’m interested in the point where AI stops being a chat box and starts becomin
 
 ---
 
-## `05 // BUILD DOMAINS`
+## `04 // BUILD DOMAINS`
 
 <table>
 <tr>
@@ -154,7 +138,7 @@ Research complex products, map behavior and architecture, then use that understa
 
 ---
 
-## `06 // PUBLIC LAB`
+## `05 // PUBLIC LAB`
 
 Public GitHub is only one slice of what I’m working on. I keep forked research repos visibly labeled instead of presenting upstream work as mine.
 
@@ -171,7 +155,7 @@ Public GitHub is only one slice of what I’m working on. I keep forked research
 
 ---
 
-## `07 // TOOL DECK`
+## `06 // TOOL DECK`
 
 <p align="center">
   <img width="100%" src="./assets/tool-deck.svg" alt="Capability tool deck covering languages, runtimes, data, automation, and agent infrastructure" />
@@ -179,7 +163,7 @@ Public GitHub is only one slice of what I’m working on. I keep forked research
 
 ---
 
-## `08 // TELEMETRY`
+## `07 // TELEMETRY`
 
 <p align="center">
   <img width="100%" src="./assets/telemetry.svg" alt="Self-hosted GitHub telemetry including public repositories, repository mix, latest public activity, and language distribution" />
@@ -189,7 +173,7 @@ Public GitHub is only one slice of what I’m working on. I keep forked research
 
 ---
 
-## `09 // OPERATING PRINCIPLES`
+## `08 // OPERATING PRINCIPLES`
 
 ```text
 01  build the real thing, not a demo of the thing

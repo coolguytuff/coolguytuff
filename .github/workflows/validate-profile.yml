@@ -58,7 +58,9 @@ jobs:
               assert token not in readme
           assert '@gmail.com' not in readme.lower()
           assert 'dave-agent-os' not in readme
-          hierarchy=['./assets/identity-headboard.svg','./profile-3d-contrib/profile-night-rainbow.svg','./assets/dave-command-core.svg','./assets/activity-world.svg','## `03 // SIGNAL`']
+          assert './assets/activity-world.svg' not in readme, 'Activity World is intentionally hidden from the public profile'
+          assert 'ACTIVITY WORLD' not in readme and 'TITAN' not in readme, 'hidden mascot copy leaked into the public profile'
+          hierarchy=['./assets/identity-headboard.svg','./profile-3d-contrib/profile-night-rainbow.svg','./assets/dave-command-core.svg','## `02 // SIGNAL`']
           offsets=[readme.index(marker) for marker in hierarchy]
           assert offsets == sorted(offsets), f'profile hero hierarchy regressed: {list(zip(hierarchy, offsets))}'
           displayed={root/source[2:] for source in image_sources if source.endswith('.svg')}
@@ -77,7 +79,7 @@ jobs:
           assert percentages and sum(percentages)==100
           dave=(root/'assets/dave-command-core.svg').read_text(encoding='utf-8')
           assert '<animate' in dave and 'dur="28s"' in dave
-          print('profile v3 hierarchy, assets, accessibility and SVG safety validated')
+          print('public profile hierarchy, hidden Activity World, assets, accessibility and SVG safety validated')
           PY
       - name: Generate telemetry against GitHub API
         env:
