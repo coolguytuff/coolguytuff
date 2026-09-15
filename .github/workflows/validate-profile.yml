@@ -1,0 +1,53 @@
+name: Public profile privacy guard
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  privacy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+      - name: Enforce approved public surface
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          allowed = {
+              'README.md',
+              '.github/workflows/validate-profile.yml',
+              '.github/workflows/final-public-scrub.yml',
+              '.github/workflows/run-retention-cleaner.yml',
+          }
+          tracked = {
+              p.as_posix()
+              for p in Path('.').rglob('*')
+              if p.is_file() and '.git' not in p.parts
+          }
+          assert tracked == allowed, f'unapproved public files: {sorted(tracked - allowed)}; missing: {sorted(allowed - tracked)}'
+
+          expected = """# coolguytuff
+
+          Building software, automation, and experiments.
+
+          Public GitHub is intentionally limited to work that is meant to be public. Private projects, internal architecture, credentials, personal contact information, and private research are not documented here.
+          """
+          readme = Path('README.md').read_text(encoding='utf-8')
+          assert readme == expected, 'README differs from approved public-only text'
+
+          email_re = re.compile(r'(?i)\b[A-Z0-9._%+-]+@([A-Z0-9.-]+\.[A-Z]{2,})\b')
+          allowed_domains = {'users.noreply.github.com', 'github.com'}
+          for rel in allowed:
+              text = Path(rel).read_text(encoding='utf-8')
+              for match in email_re.finditer(text):
+                  assert match.group(1).lower() in allowed_domains, f'non-public email address found in {rel}'
+
+          print('approved public surface verified')

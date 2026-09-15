@@ -1,0 +1,28 @@
+name: Public workflow-run retention cleaner
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Remove obsolete completed workflow runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          sleep 15
+          current="${GITHUB_RUN_ID}"
+          gh api --paginate "repos/${GITHUB_REPOSITORY}/actions/runs?per_page=100" \
+            --jq '.workflow_runs[] | select(.status == "completed") | .id' \
+            | while read -r run_id; do
+                [ -n "$run_id" ] || continue
+                [ "$run_id" = "$current" ] && continue
+                gh api --method DELETE "repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}"
+              done

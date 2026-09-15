@@ -1,0 +1,43 @@
+name: Public history minimizer
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  minimize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+        with:
+          fetch-depth: 0
+      - name: Replace reachable branch history with a root commit of the same tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          tree="$(git rev-parse HEAD^{tree})"
+          root="$(printf '%s\n' 'Minimize public profile history' | git commit-tree "$tree")"
+          git push --force origin "$root:refs/heads/main"
+      - name: Remove all non-main branch refs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --prune origin '+refs/heads/*:refs/remotes/origin/*'
+          mapfile -t branches < <(
+            git for-each-ref --format='%(refname:strip=3)' refs/remotes/origin \
+              | grep -v -E '^(HEAD|main)$' || true
+          )
+          if [ "${#branches[@]}" -gt 0 ]; then
+            git push origin --delete "${branches[@]}"
+          fi
+      - name: Dispatch workflow-run retention cleanup
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: gh workflow run run-retention-cleaner.yml --ref main
